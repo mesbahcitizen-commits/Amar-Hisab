@@ -1,14 +1,14 @@
-আমার হিসাব — Offline Android App
-=================================
-এই সংস্করণে:
-- লেনদেন সম্পাদনার জন্য পূর্ণ ফর্ম যুক্ত করা হয়েছে।
-- Delete confirmation dialog যুক্ত করা হয়েছে।
-- WebView-তে WebChromeClient যুক্ত করা হয়েছে।
-- ব্যবহারকারীর দেওয়া পোর্ট্রেট-ভিত্তিক অ্যাপ আইকন যুক্ত করা হয়েছে।
-- LocalStorage-এ ডেটা সংরক্ষণ, CSV এবং JSON backup/restore আগের মতো রাখা হয়েছে।
+Amar Hisab — Offline Android App
+================================
+This corrected build includes:
+- Working Edit form: change transaction type, date, amount, category and note, then Save Changes.
+- Delete confirmation.
+- Bengali and English language selector; the selected language is saved on the device.
+- User-provided portrait-based Amar Hisab launcher icon at all Android densities.
+- Local offline storage, CSV export, and JSON backup/restore.
+
+IMPORTANT FIX:
+The previous JavaScript stopped during startup because the translation table called tr() before currentLang/translations were initialized, and the DOM helper was declared after its first use. Both startup errors are corrected.
 
 Build:
-GitHub Actions-এ Build Amar Hisab APK workflow চালান।
-সফল হলে Artifacts থেকে Amar-Hisab-APK ডাউনলোড করুন।
-
-- বাংলা ও English ভাষা পরিবর্তনের অপশন যুক্ত করা হয়েছে; পছন্দ সংরক্ষিত থাকবে।
+GitHub Actions → Build Amar Hisab APK. After a successful run, download the Amar-Hisab-APK artifact.
