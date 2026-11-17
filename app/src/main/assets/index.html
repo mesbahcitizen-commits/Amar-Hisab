@@ -126,6 +126,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
   <div><label>Date received</label><input id="loanDate" type="date" required></div>
   <div><label>Interest rate (% per year, optional)</label><input id="loanRate" type="number" min="0" step="0.01" value="0"></div>
   <div><label>Note (optional)</label><input id="loanNote"></div>
+  <div class="wide"><label>Loan credited to account</label><select id="loanAccount" required></select></div>
   <button class="primary wide" type="submit">Record Loan Received</button>
  </form>
  <div id="loanList"></div>
@@ -135,9 +136,28 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
   <div><label>Principal repaid (BDT)</label><input id="repaymentPrincipal" type="number" min="0" step="0.01" value="0" required></div>
   <div><label>Interest / charge paid (BDT)</label><input id="repaymentInterest" type="number" min="0" step="0.01" value="0" required></div>
   <div><label>Payment date</label><input id="repaymentDate" type="date" required></div>
+  <div><label>Paid from account</label><select id="repaymentAccount" required></select></div>
   <button class="primary wide" type="submit">Save Repayment</button>
  </form>
  <div id="repaymentList"></div>
+ <hr>
+ <h3>EMI Schedule</h3>
+ <form id="emiPlanForm" class="hidden">
+  <div><label>Loan</label><select id="emiLoan" required></select></div>
+  <div><label>Installment amount (BDT)</label><input id="emiAmount" type="number" min="0.01" step="0.01" required></div>
+  <div><label>Number of installments</label><input id="emiCount" type="number" min="1" max="600" step="1" required></div>
+  <div><label>First due date</label><input id="emiFirstDate" type="date" required></div>
+  <button class="primary wide" type="submit">Create EMI Schedule</button>
+ </form>
+ <div id="emiPlanList"></div>
+ <form id="emiPaymentForm" class="hidden">
+  <h3 class="wide">Record EMI Payment</h3>
+  <div><label>EMI plan</label><select id="emiPaymentPlan" required></select></div>
+  <div><label>Payment account</label><select id="emiPaymentAccount" required></select></div>
+  <div><label>Payment date</label><input id="emiPaymentDate" type="date" required></div>
+  <button class="primary wide" type="submit">Pay Next EMI Installment</button>
+ </form>
+ <div id="emiPaymentList"></div>
 </section>
 
 <div id="editModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
@@ -206,21 +226,23 @@ $('cancelDelete').onclick=()=>{deletingId=null;$('deleteModal').classList.add('h
 $('transactions').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)window.editEntry(edit.dataset.edit);if(del)window.deleteEntry(del.dataset.delete)});
 ['fromDate','toDate','reportMonth'].forEach(id=>$(id).addEventListener('change',render));
 $('csvBtn').onclick=()=>{const rows=[[tr('date'),tr('type'),tr('category'),tr('amount'),currentLang==='en'?'Description':'বিবরণ'],...entries.map(x=>[x.date,x.type==='income'?tr('income'):tr('expense'),x.category,x.amount,x.note])];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'amar-hisab-report.csv')};
-$('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',version:2,entries,accounts,movements,loans,repayments},null,2)],{type:'application/json'}),'amar-hisab-backup.json');
+$('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',version:2,entries,accounts,movements,loans,repayments,emiPlans,emiPayments},null,2)],{type:'application/json'}),'amar-hisab-backup.json');
 $('restoreBtn').onclick=()=>$('restoreFile').click();
-$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];if(Array.isArray(d.accounts)){const known=new Set(accounts.map(x=>x.id));accounts=[...accounts,...d.accounts.filter(x=>!known.has(x.id))]}if(Array.isArray(d.movements)){const known=new Set(movements.map(x=>x.id));movements=[...movements,...d.movements.filter(x=>!known.has(x.id))]}if(Array.isArray(d.loans)){const known=new Set(loans.map(x=>x.id));loans=[...loans,...d.loans.filter(x=>!known.has(x.id))]}if(Array.isArray(d.repayments)){const known=new Set(repayments.map(x=>x.id));repayments=[...repayments,...d.repayments.filter(x=>!known.has(x.id))]}save();persistFinance();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
+$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];if(Array.isArray(d.accounts)){const known=new Set(accounts.map(x=>x.id));accounts=[...accounts,...d.accounts.filter(x=>!known.has(x.id))]}if(Array.isArray(d.movements)){const known=new Set(movements.map(x=>x.id));movements=[...movements,...d.movements.filter(x=>!known.has(x.id))]}if(Array.isArray(d.loans)){const known=new Set(loans.map(x=>x.id));loans=[...loans,...d.loans.filter(x=>!known.has(x.id))]}if(Array.isArray(d.repayments)){const known=new Set(repayments.map(x=>x.id));repayments=[...repayments,...d.repayments.filter(x=>!known.has(x.id))]}if(Array.isArray(d.emiPlans)){const known=new Set(emiPlans.map(x=>x.id));emiPlans=[...emiPlans,...d.emiPlans.filter(x=>!known.has(x.id))]}if(Array.isArray(d.emiPayments)){const known=new Set(emiPayments.map(x=>x.id));emiPayments=[...emiPayments,...d.emiPayments.filter(x=>!known.has(x.id))]}save();persistFinance();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
 /* Amar Hisab 2.0: account, transfer and loan ledger (manual/offline) */
-const ACCOUNTS_KEY='amarHisab_accounts_v2', MOVES_KEY='amarHisab_movements_v2', LOANS_KEY='amarHisab_loans_v2', REPAYS_KEY='amarHisab_repayments_v2';
+const ACCOUNTS_KEY='amarHisab_accounts_v2', MOVES_KEY='amarHisab_movements_v2', LOANS_KEY='amarHisab_loans_v2', REPAYS_KEY='amarHisab_repayments_v2', EMI_PLANS_KEY='amarHisab_emi_plans_v2', EMI_PAYMENTS_KEY='amarHisab_emi_payments_v2';
 let accounts=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'[]');
 let movements=JSON.parse(localStorage.getItem(MOVES_KEY)||'[]');
 let loans=JSON.parse(localStorage.getItem(LOANS_KEY)||'[]');
 let repayments=JSON.parse(localStorage.getItem(REPAYS_KEY)||'[]');
-const persistFinance=()=>{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts));localStorage.setItem(MOVES_KEY,JSON.stringify(movements));localStorage.setItem(LOANS_KEY,JSON.stringify(loans));localStorage.setItem(REPAYS_KEY,JSON.stringify(repayments));renderFinance()};
+let emiPlans=JSON.parse(localStorage.getItem(EMI_PLANS_KEY)||'[]');
+let emiPayments=JSON.parse(localStorage.getItem(EMI_PAYMENTS_KEY)||'[]');
+const persistFinance=()=>{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts));localStorage.setItem(MOVES_KEY,JSON.stringify(movements));localStorage.setItem(LOANS_KEY,JSON.stringify(loans));localStorage.setItem(REPAYS_KEY,JSON.stringify(repayments));localStorage.setItem(EMI_PLANS_KEY,JSON.stringify(emiPlans));localStorage.setItem(EMI_PAYMENTS_KEY,JSON.stringify(emiPayments));renderFinance()};
 const fmtBDT=n=>'৳ '+Number(n||0).toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
 function accountBalance(a){return movements.reduce((b,m)=>{if(m.kind==='transfer'){if(m.from===a.id)b-=m.amount;if(m.to===a.id)b+=m.amount}else{if(m.account===a.id)b+=(m.kind==='deposit'?m.amount:-m.amount)}return b},Number(a.opening||0))}
-function refreshAccountSelects(){['movementFrom','movementTo'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=accounts.map(a=>'<option value="'+a.id+'">'+a.name+' ('+a.type+')</option>').join('');if(accounts.some(a=>a.id===old))el.value=old});$('repaymentLoan').innerHTML=loans.map(l=>'<option value="'+l.id+'">'+l.lender+' — '+l.purpose+'</option>').join('')}
+function refreshAccountSelects(){['movementFrom','movementTo','loanAccount','repaymentAccount','emiPaymentAccount'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=accounts.map(a=>'<option value="'+a.id+'">'+escapeFinance(a.name)+' ('+a.type+')</option>').join('');if(accounts.some(a=>a.id===old))el.value=old});['repaymentLoan','emiLoan'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=loans.map(l=>'<option value="'+l.id+'">'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</option>').join('');if(loans.some(l=>l.id===old))el.value=old});const p=$('emiPaymentPlan');if(p){const old=p.value;p.innerHTML=emiPlans.map(x=>'<option value="'+x.id+'">'+x.count+' installments · '+fmtBDT(x.amount)+'</option>').join('');if(emiPlans.some(x=>x.id===old))p.value=old}}
 function renderFinance(){
  refreshAccountSelects();
  $('accountList').innerHTML=accounts.length?accounts.map(a=>'<div class="item"><div><b>'+escapeFinance(a.name)+'</b><small>'+a.type.toUpperCase()+(a.identifier?' · '+escapeFinance(a.identifier):'')+'</small></div><div class="amt">'+fmtBDT(accountBalance(a))+'</div></div>').join(''):'<p class="empty">No accounts added yet.</p>';
@@ -228,15 +250,21 @@ function renderFinance(){
  $('movementList').innerHTML=movements.slice().reverse().slice(0,30).map(m=>'<div class="item"><div><b>'+m.kind.toUpperCase()+'</b><small>'+m.date+' · '+escapeFinance(m.note||'')+'</small></div><div class="amt">'+fmtBDT(m.amount)+'</div></div>').join('')||'<p class="empty">No account movements yet.</p>';
  $('loanList').innerHTML=loans.map(l=>{const paid=repayments.filter(r=>r.loanId===l.id).reduce((s,r)=>s+r.principal,0);return '<div class="item"><div><b>'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</b><small>'+l.date+' · Principal '+fmtBDT(l.principal)+' · Interest '+Number(l.rate||0)+'% p.a.</small></div><div class="amt">Due '+fmtBDT(Math.max(0,l.principal-paid))+'</div></div>'}).join('')||'<p class="empty">No loans recorded yet.</p>';
  $('repaymentForm').classList.toggle('hidden',!loans.length);
+ $('emiPlanForm').classList.toggle('hidden',!loans.length);
+ $('emiPaymentForm').classList.toggle('hidden',!emiPlans.length);
+ $('emiPlanList').innerHTML=emiPlans.map(p=>{const paid=emiPayments.filter(x=>x.planId===p.id).length;const l=loans.find(x=>x.id===p.loanId);return '<div class="item"><div><b>'+escapeFinance(l?.lender||'Loan')+' EMI</b><small>'+fmtBDT(p.amount)+' × '+p.count+' · First due '+p.firstDate+'</small></div><div class="amt">'+paid+'/'+p.count+' paid</div></div>'}).join('')||'<p class="empty">No EMI schedules created yet.</p>';
+ $('emiPaymentList').innerHTML=emiPayments.slice().reverse().slice(0,30).map(p=>'<div class="item"><div><b>EMI installment '+p.installment+'</b><small>'+p.date+' · '+fmtBDT(p.amount)+'</small></div><div class="amt">Paid</div></div>').join('');
  $('repaymentList').innerHTML=repayments.slice().reverse().slice(0,30).map(r=>'<div class="item"><div><b>Loan repayment</b><small>'+r.date+' · Principal '+fmtBDT(r.principal)+' · Interest '+fmtBDT(r.interest)+'</small></div><div class="amt">'+fmtBDT(r.principal+r.interest)+'</div></div>').join('');
 }
 function escapeFinance(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 $('movementType').addEventListener('change',()=>{$('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer')});
 $('accountForm').addEventListener('submit',e=>{e.preventDefault();const name=$('accountName').value.trim(),opening=Number($('accountOpening').value);if(!name||opening<0)return;accounts.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),type:$('accountType').value,name,identifier:$('accountNumber').value.trim(),opening});e.target.reset();$('accountOpening').value='0';persistFinance()});
 $('movementForm').addEventListener('submit',e=>{e.preventDefault();const kind=$('movementType').value,amount=Number($('movementAmount').value),from=$('movementFrom').value,to=$('movementTo').value;if(!(amount>0)||!from)return;if(kind==='transfer'&&(!to||to===from)){alert('Choose two different accounts for a transfer.');return}if(kind!=='deposit'&&kind!=='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}if(kind==='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}movements.push({id:String(Date.now()),kind,amount,account:kind==='transfer'?undefined:from,from:kind==='transfer'?from:undefined,to:kind==='transfer'?to:undefined,date:$('movementDate').value,note:$('movementNote').value.trim()});e.target.reset();$('movementDate').value=today;persistFinance()});
-$('loanForm').addEventListener('submit',e=>{e.preventDefault();const principal=Number($('loanPrincipal').value);if(!(principal>0))return;loans.push({id:String(Date.now()),lender:$('loanLender').value.trim(),purpose:$('loanPurpose').value.trim(),principal,date:$('loanDate').value,rate:Number($('loanRate').value||0),note:$('loanNote').value.trim()});e.target.reset();$('loanDate').value=today;$('loanRate').value='0';persistFinance()});
-$('repaymentForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('repaymentLoan').value,principal=Number($('repaymentPrincipal').value),interest=Number($('repaymentInterest').value),loan=loans.find(l=>l.id===loanId);if(!loan||principal<0||interest<0||principal+interest<=0)return;const paid=repayments.filter(r=>r.loanId===loanId).reduce((s,r)=>s+r.principal,0);if(principal>loan.principal-paid){alert('Principal repayment exceeds outstanding loan balance.');return}repayments.push({id:String(Date.now()),loanId,principal,interest,date:$('repaymentDate').value});e.target.reset();$('repaymentDate').value=today;persistFinance()});
-$('movementDate').value=today;$('loanDate').value=today;$('repaymentDate').value=today;
+$('loanForm').addEventListener('submit',e=>{e.preventDefault();const principal=Number($('loanPrincipal').value);if(!(principal>0))return;const accountId=$('loanAccount').value;if(!accountId){alert('Please add and select an account to receive the loan.');return}const loanId=String(Date.now());loans.push({id:loanId,lender:$('loanLender').value.trim(),purpose:$('loanPurpose').value.trim(),principal,date:$('loanDate').value,rate:Number($('loanRate').value||0),note:$('loanNote').value.trim(),accountId});movements.push({id:loanId+'-received',kind:'deposit',amount:principal,account:accountId,date:$('loanDate').value,note:'Loan received: '+$('loanLender').value.trim()});e.target.reset();$('loanDate').value=today;$('loanRate').value='0';persistFinance()});
+$('emiPlanForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('emiLoan').value,amount=Number($('emiAmount').value),count=Number($('emiCount').value),firstDate=$('emiFirstDate').value;if(!loans.some(l=>l.id===loanId)||!(amount>0)||!Number.isInteger(count)||count<1||count>600||!firstDate)return;emiPlans.push({id:String(Date.now()),loanId,amount,count,firstDate});e.target.reset();$('emiFirstDate').value=today;persistFinance()});
+$('emiPaymentForm').addEventListener('submit',e=>{e.preventDefault();const planId=$('emiPaymentPlan').value,plan=emiPlans.find(p=>p.id===planId),accountId=$('emiPaymentAccount').value;if(!plan||!accountId)return;const paid=emiPayments.filter(p=>p.planId===planId).length;if(paid>=plan.count){alert('All installments are already paid.');return}const account=accounts.find(a=>a.id===accountId),amount=Number(plan.amount);if(!account||accountBalance(account)<amount){alert('Insufficient account balance.');return}const id=String(Date.now()),date=$('emiPaymentDate').value;emiPayments.push({id,planId,installment:paid+1,amount,date,accountId});movements.push({id:id+'-emi',kind:'withdrawal',amount,account:accountId,date,note:'EMI installment '+(paid+1)});persistFinance()});
+$('repaymentForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('repaymentLoan').value,principal=Number($('repaymentPrincipal').value),interest=Number($('repaymentInterest').value),loan=loans.find(l=>l.id===loanId);if(!loan||principal<0||interest<0||principal+interest<=0)return;const paid=repayments.filter(r=>r.loanId===loanId).reduce((s,r)=>s+r.principal,0);if(principal>loan.principal-paid){alert('Principal repayment exceeds outstanding loan balance.');return}const accountId=$('repaymentAccount').value,total=principal+interest;if(!accountId||accountBalance(accounts.find(a=>a.id===accountId))<total){alert('Select an account with sufficient balance.');return}const repaymentId=String(Date.now());repayments.push({id:repaymentId,loanId,principal,interest,date:$('repaymentDate').value,accountId});movements.push({id:repaymentId+'-paid',kind:'withdrawal',amount:total,account:accountId,date:$('repaymentDate').value,note:'Loan repayment'});e.target.reset();$('repaymentDate').value=today;persistFinance()});
+$('movementDate').value=today;$('loanDate').value=today;$('repaymentDate').value=today;$('emiFirstDate').value=today;$('emiPaymentDate').value=today;
 
 renderFinance();
 applyLanguage();
