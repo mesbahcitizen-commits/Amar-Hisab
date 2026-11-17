@@ -55,6 +55,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <button class="active" data-tab="entry" data-i18n="newEntry">নতুন এন্ট্রি</button>
 <button data-tab="history" data-i18n="history">লেনদেনের তালিকা</button>
 <button data-tab="report" data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</button>
+<button data-tab="finance" data-i18n="financeTab">ব্যাংক, বিকাশ, নগদ ও লোন</button>
 </nav>
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
@@ -89,6 +90,54 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <input class="hidden" id="restoreFile" type="file" accept="application/json">
 </div>
 <p class="muted" data-i18n="backupHelp">আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।</p>
+</section>
+
+
+<section id="finance" class="panel hidden">
+ <h2>Bank, bKash, Nagad & Loan Management</h2>
+ <p class="muted">Account movements are transfers, not income or expenses. Enter transactions manually; this app does not connect to financial institutions.</p>
+ <h3>Accounts</h3>
+ <form id="accountForm">
+  <div><label>Account type</label><select id="accountType"><option value="cash">Cash</option><option value="bank">Bank</option><option value="bkash">bKash</option><option value="nagad">Nagad</option></select></div>
+  <div><label>Account name</label><input id="accountName" required placeholder="e.g. Salary Account"></div>
+  <div><label>Account identifier (optional)</label><input id="accountNumber" placeholder="Last 4 digits / nickname"></div>
+  <div><label>Opening balance (BDT)</label><input id="accountOpening" type="number" min="0" step="0.01" value="0" required></div>
+  <button class="primary wide" type="submit">Add Account</button>
+ </form>
+ <div id="accountList"></div>
+ <hr>
+ <h3>Deposit, Withdrawal & Transfer</h3>
+ <form id="movementForm">
+  <div><label>Action</label><select id="movementType"><option value="deposit">Deposit</option><option value="withdrawal">Withdrawal</option><option value="transfer">Transfer</option></select></div>
+  <div><label>Amount (BDT)</label><input id="movementAmount" type="number" min="0.01" step="0.01" required></div>
+  <div><label>From / Account</label><select id="movementFrom" required></select></div>
+  <div id="movementToWrap" class="hidden"><label>To Account</label><select id="movementTo"></select></div>
+  <div><label>Date</label><input id="movementDate" type="date" required></div>
+  <textarea id="movementNote" rows="2" placeholder="Note / reference (optional)"></textarea>
+  <button class="primary wide" type="submit">Save Account Transaction</button>
+ </form>
+ <div id="movementList"></div>
+ <hr>
+ <h3>Loans</h3>
+ <form id="loanForm">
+  <div><label>Loan provider / person</label><input id="loanLender" required></div>
+  <div><label>Loan purpose</label><input id="loanPurpose" required placeholder="e.g. Home, education, emergency"></div>
+  <div><label>Principal (BDT)</label><input id="loanPrincipal" type="number" min="0.01" step="0.01" required></div>
+  <div><label>Date received</label><input id="loanDate" type="date" required></div>
+  <div><label>Interest rate (% per year, optional)</label><input id="loanRate" type="number" min="0" step="0.01" value="0"></div>
+  <div><label>Note (optional)</label><input id="loanNote"></div>
+  <button class="primary wide" type="submit">Record Loan Received</button>
+ </form>
+ <div id="loanList"></div>
+ <form id="repaymentForm" class="hidden">
+  <h3 class="wide">Record Loan Repayment</h3>
+  <div><label>Loan</label><select id="repaymentLoan" required></select></div>
+  <div><label>Principal repaid (BDT)</label><input id="repaymentPrincipal" type="number" min="0" step="0.01" value="0" required></div>
+  <div><label>Interest / charge paid (BDT)</label><input id="repaymentInterest" type="number" min="0" step="0.01" value="0" required></div>
+  <div><label>Payment date</label><input id="repaymentDate" type="date" required></div>
+  <button class="primary wide" type="submit">Save Repayment</button>
+ </form>
+ <div id="repaymentList"></div>
 </section>
 
 <div id="editModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
@@ -161,6 +210,35 @@ $('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',v
 $('restoreBtn').onclick=()=>$('restoreFile').click();
 $('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];save();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+/* Amar Hisab 2.0: account, transfer and loan ledger (manual/offline) */
+const ACCOUNTS_KEY='amarHisab_accounts_v2', MOVES_KEY='amarHisab_movements_v2', LOANS_KEY='amarHisab_loans_v2', REPAYS_KEY='amarHisab_repayments_v2';
+let accounts=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'[]');
+let movements=JSON.parse(localStorage.getItem(MOVES_KEY)||'[]');
+let loans=JSON.parse(localStorage.getItem(LOANS_KEY)||'[]');
+let repayments=JSON.parse(localStorage.getItem(REPAYS_KEY)||'[]');
+const persistFinance=()=>{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts));localStorage.setItem(MOVES_KEY,JSON.stringify(movements));localStorage.setItem(LOANS_KEY,JSON.stringify(loans));localStorage.setItem(REPAYS_KEY,JSON.stringify(repayments));renderFinance()};
+const fmtBDT=n=>'৳ '+Number(n||0).toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
+function accountBalance(a){return movements.reduce((b,m)=>{if(m.kind==='transfer'){if(m.from===a.id)b-=m.amount;if(m.to===a.id)b+=m.amount}else{if(m.account===a.id)b+=(m.kind==='deposit'?m.amount:-m.amount)}return b},Number(a.opening||0))}
+function refreshAccountSelects(){['movementFrom','movementTo'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=accounts.map(a=>'<option value="'+a.id+'">'+a.name+' ('+a.type+')</option>').join('');if(accounts.some(a=>a.id===old))el.value=old});$('repaymentLoan').innerHTML=loans.map(l=>'<option value="'+l.id+'">'+l.lender+' — '+l.purpose+'</option>').join('')}
+function renderFinance(){
+ refreshAccountSelects();
+ $('accountList').innerHTML=accounts.length?accounts.map(a=>'<div class="item"><div><b>'+escapeFinance(a.name)+'</b><small>'+a.type.toUpperCase()+(a.identifier?' · '+escapeFinance(a.identifier):'')+'</small></div><div class="amt">'+fmtBDT(accountBalance(a))+'</div></div>').join(''):'<p class="empty">No accounts added yet.</p>';
+ $('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer');
+ $('movementList').innerHTML=movements.slice().reverse().slice(0,30).map(m=>'<div class="item"><div><b>'+m.kind.toUpperCase()+'</b><small>'+m.date+' · '+escapeFinance(m.note||'')+'</small></div><div class="amt">'+fmtBDT(m.amount)+'</div></div>').join('')||'<p class="empty">No account movements yet.</p>';
+ $('loanList').innerHTML=loans.map(l=>{const paid=repayments.filter(r=>r.loanId===l.id).reduce((s,r)=>s+r.principal,0);return '<div class="item"><div><b>'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</b><small>'+l.date+' · Principal '+fmtBDT(l.principal)+' · Interest '+Number(l.rate||0)+'% p.a.</small></div><div class="amt">Due '+fmtBDT(Math.max(0,l.principal-paid))+'</div></div>'}).join('')||'<p class="empty">No loans recorded yet.</p>';
+ $('repaymentForm').classList.toggle('hidden',!loans.length);
+ $('repaymentList').innerHTML=repayments.slice().reverse().slice(0,30).map(r=>'<div class="item"><div><b>Loan repayment</b><small>'+r.date+' · Principal '+fmtBDT(r.principal)+' · Interest '+fmtBDT(r.interest)+'</small></div><div class="amt">'+fmtBDT(r.principal+r.interest)+'</div></div>').join('');
+}
+function escapeFinance(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('movementType').addEventListener('change',()=>{$('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer')});
+$('accountForm').addEventListener('submit',e=>{e.preventDefault();const name=$('accountName').value.trim(),opening=Number($('accountOpening').value);if(!name||opening<0)return;accounts.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),type:$('accountType').value,name,identifier:$('accountNumber').value.trim(),opening});e.target.reset();$('accountOpening').value='0';persistFinance()});
+$('movementForm').addEventListener('submit',e=>{e.preventDefault();const kind=$('movementType').value,amount=Number($('movementAmount').value),from=$('movementFrom').value,to=$('movementTo').value;if(!(amount>0)||!from)return;if(kind==='transfer'&&(!to||to===from)){alert('Choose two different accounts for a transfer.');return}if(kind!=='deposit'&&kind!=='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}if(kind==='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}movements.push({id:String(Date.now()),kind,amount,account:kind==='transfer'?undefined:from,from:kind==='transfer'?from:undefined,to:kind==='transfer'?to:undefined,date:$('movementDate').value,note:$('movementNote').value.trim()});e.target.reset();$('movementDate').value=today;persistFinance()});
+$('loanForm').addEventListener('submit',e=>{e.preventDefault();const principal=Number($('loanPrincipal').value);if(!(principal>0))return;loans.push({id:String(Date.now()),lender:$('loanLender').value.trim(),purpose:$('loanPurpose').value.trim(),principal,date:$('loanDate').value,rate:Number($('loanRate').value||0),note:$('loanNote').value.trim()});e.target.reset();$('loanDate').value=today;$('loanRate').value='0';persistFinance()});
+$('repaymentForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('repaymentLoan').value,principal=Number($('repaymentPrincipal').value),interest=Number($('repaymentInterest').value),loan=loans.find(l=>l.id===loanId);if(!loan||principal<0||interest<0||principal+interest<=0)return;const paid=repayments.filter(r=>r.loanId===loanId).reduce((s,r)=>s+r.principal,0);if(principal>loan.principal-paid){alert('Principal repayment exceeds outstanding loan balance.');return}repayments.push({id:String(Date.now()),loanId,principal,interest,date:$('repaymentDate').value});e.target.reset();$('repaymentDate').value=today;persistFinance()});
+$('movementDate').value=today;$('loanDate').value=today;$('repaymentDate').value=today;
+
+renderFinance();
 applyLanguage();
 render();
 </script>
