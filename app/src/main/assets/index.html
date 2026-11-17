@@ -182,7 +182,7 @@ $('date').value=today;$('reportMonth').value=today.slice(0,7);
 function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
 function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('')}
 $('type').addEventListener('change',updateCats);updateCats();
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report','finance'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
 $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').value);if(!(amount>0))return;
 entries.unshift({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,note:$('note').value.trim()});
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
@@ -206,9 +206,9 @@ $('cancelDelete').onclick=()=>{deletingId=null;$('deleteModal').classList.add('h
 $('transactions').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)window.editEntry(edit.dataset.edit);if(del)window.deleteEntry(del.dataset.delete)});
 ['fromDate','toDate','reportMonth'].forEach(id=>$(id).addEventListener('change',render));
 $('csvBtn').onclick=()=>{const rows=[[tr('date'),tr('type'),tr('category'),tr('amount'),currentLang==='en'?'Description':'বিবরণ'],...entries.map(x=>[x.date,x.type==='income'?tr('income'):tr('expense'),x.category,x.amount,x.note])];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'amar-hisab-report.csv')};
-$('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',version:1,entries},null,2)],{type:'application/json'}),'amar-hisab-backup.json');
+$('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',version:2,entries,accounts,movements,loans,repayments},null,2)],{type:'application/json'}),'amar-hisab-backup.json');
 $('restoreBtn').onclick=()=>$('restoreFile').click();
-$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];save();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
+$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];if(Array.isArray(d.accounts)){const known=new Set(accounts.map(x=>x.id));accounts=[...accounts,...d.accounts.filter(x=>!known.has(x.id))]}if(Array.isArray(d.movements)){const known=new Set(movements.map(x=>x.id));movements=[...movements,...d.movements.filter(x=>!known.has(x.id))]}if(Array.isArray(d.loans)){const known=new Set(loans.map(x=>x.id));loans=[...loans,...d.loans.filter(x=>!known.has(x.id))]}if(Array.isArray(d.repayments)){const known=new Set(repayments.map(x=>x.id));repayments=[...repayments,...d.repayments.filter(x=>!known.has(x.id))]}save();persistFinance();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
 /* Amar Hisab 2.0: account, transfer and loan ledger (manual/offline) */
