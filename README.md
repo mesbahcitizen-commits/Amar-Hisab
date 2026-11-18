@@ -5,8 +5,8 @@ A personal income and expense tracker for Android. The Android app uses a WebVie
 ## Current development version
 
 - App display name: আমার হিসাব (নতুন)
-- Version name: 1.2
-- Version code: 3
+- Version name: 1.3
+- Version code: 4
 - Android application ID: `com.example.amarhisab.export`
 - Android namespace: `com.example.amarhisab`
 - Minimum Android SDK: 23
@@ -46,7 +46,9 @@ APK output: `app/build/outputs/apk/debug/app-debug.apk`.
 ## Data safety
 
 - The app's browser data is stored locally on the device.
-- Use the in-app Backup option and save the JSON file somewhere safe.
+- Use the in-app Backup option and save the versioned JSON file somewhere safe.
+- v1.3 backup includes a creation timestamp and language preference; restore validates every transaction and merges by transaction ID.
+- CSV and Excel exports cover the selected month; PDF offers selected-month and complete-history reports.
 - Test Restore with a copy of a backup file before relying on it.
 - Never clear app storage or uninstall an app that contains the only copy of important records.
 - A new package ID installs separately and does not migrate old app data automatically.
