@@ -34,8 +34,8 @@ Do not delete or rename these files without first updating the build instruction
 
 ## 3. Current Android configuration
 
-- Version name: `1.2`
-- Version code: `3`
+- Version name: `1.3`
+- Version code: `4`
 - Application ID: `com.example.amarhisab.export`
 - Namespace: `com.example.amarhisab`
 - minSdk: 23
@@ -83,6 +83,14 @@ Android host code is in `MainActivity.java`:
 The interface and report logic are in `index.html`. Check that the JavaScript actually calls these bridge methods and that the backup format contains all records and settings before declaring Backup/Restore complete.
 
 Important: a build succeeding only proves that the APK compiled. It does not prove that backup, restore, PDF printing, CSV or Excel exports work on a real phone. Test each feature on-device and record the result.
+
+### v1.3 behavior
+
+- JSON backup format version 2 includes app identifier, creation timestamp, language preference, and all transaction records.
+- Restore accepts the earlier v1 backup envelope as well as v2, validates all transaction records, limits selected backup size to 20 MB, and merges records by ID to avoid duplicates.
+- CSV and Excel-compatible XLS exports use the selected month.
+- PDF/Print offers a selected-month report and a separate complete-history report, with A4 print CSS and repeated table headings.
+- Local date defaults use the device's local timezone rather than UTC.
 
 ## 6. Data protection rules
 
