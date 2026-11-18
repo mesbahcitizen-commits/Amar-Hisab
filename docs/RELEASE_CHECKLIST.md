@@ -23,6 +23,20 @@ Do not label a release final until the relevant checks below have been completed
 
 ## Backup and restore
 
+- [ ] v1.3 JSON backup includes creation time, language and every transaction.
+- [ ] Restore accepts a valid v1 legacy backup and a v2 backup.
+- [ ] Restore rejects malformed records and oversized files without changing existing data.
+- [ ] Duplicate transaction IDs are not imported twice.
+
+## Report scope
+
+- [ ] CSV and Excel export only the selected month.
+- [ ] Monthly PDF includes only the selected month.
+- [ ] Complete-history PDF includes every transaction.
+- [ ] Bengali text, page breaks and repeated table headers render correctly.
+
+## Backup and restore
+
 - [ ] Create a JSON backup using the Android file picker.
 - [ ] Confirm the saved file exists and has non-zero size.
 - [ ] Make a duplicate of the test backup.
