@@ -28,7 +28,7 @@ textarea{grid-column:1/-1;resize:vertical}
 button.primary{background:var(--green);color:white;border:0;border-radius:10px;padding:12px;font:inherit;font-weight:700}
 button.secondary{background:#eaf2f1;color:#24524e;border:0;border-radius:10px;padding:10px;font:inherit}
 .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.actions button{width:100%;min-width:0;white-space:normal;line-height:1.35}.report-summary{background:#f3f7f7;border:1px solid #d7e2e0;border-radius:10px;padding:10px;line-height:1.6;overflow-wrap:anywhere}@media(max-width:380px){.actions{grid-template-columns:1fr}.panel{padding:13px}}
-.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f0}
+.month-report{margin:4px 0 14px}.metric-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.metric-tab{background:#eaf2f1;color:#24524e;border:1px solid #d7e2e0;border-radius:10px;padding:11px 6px;font:inherit;font-weight:600;min-width:0}.metric-tab.active{background:var(--green);border-color:var(--green);color:#fff}.month-report .report-summary{font-size:18px;font-weight:700;min-height:48px;display:flex;align-items:center}.month-report label{display:block;margin-bottom:6px}.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f0}
 .item:last-child{border:0}.item b{display:block}.item small{color:var(--muted)}
 .item .amt{font-weight:700;white-space:nowrap}.item button{border:0;background:none;color:var(--red);padding:4px 6px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
@@ -79,8 +79,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <section id="report" class="panel hidden">
 <h2 data-i18n="reportBackup">রিপোর্ট ও ডেটা ব্যাকআপ</h2>
 <div class="filters">
-<div><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
-<div><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><input id="monthSummary" readonly value="—"></div>
+<div class="wide"><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
+</div>
+<div class="month-report wide">
+<label data-i18n="monthlyTotal">মাসের মোট হিসাব</label>
+<div class="metric-tabs" role="group" aria-label="মাসের হিসাবের ধরন">
+<button type="button" class="metric-tab active" data-metric="income" data-i18n="metricIncome" aria-pressed="true">আয়</button>
+<button type="button" class="metric-tab" data-metric="expense" data-i18n="metricExpense" aria-pressed="false">খরচ</button>
+<button type="button" class="metric-tab" data-metric="balance" data-i18n="metricBalance" aria-pressed="false">অবশিষ্ট</button>
+</div>
+<div id="monthSummary" class="report-summary" role="status" aria-live="polite">—</div>
 </div>
 <div class="actions">
 <button class="primary" id="csvBtn" data-i18n="downloadCsv">এই মাসের CSV রিপোর্ট</button>
@@ -119,8 +127,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 const LANG_KEY='amarHisab_language';
 const $=id=>document.getElementById(id);
 const translations={
- bn:{appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'Backup-এর হিসাবগুলো বর্তমান হিসাবের সঙ্গে যোগ করবেন? একই ID-এর হিসাব পুনরায় যোগ হবে না।',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয় বা অসম্পূর্ণ।',noMonthData:'নির্বাচিত মাসে কোনো হিসাব নেই।'},
- en:{appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
+ bn:{appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',metricIncome:'আয়',metricExpense:'খরচ',metricBalance:'অবশিষ্ট',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'Backup-এর হিসাবগুলো বর্তমান হিসাবের সঙ্গে যোগ করবেন? একই ID-এর হিসাব পুনরায় যোগ হবে না।',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয় বা অসম্পূর্ণ।',noMonthData:'নির্বাচিত মাসে কোনো হিসাব নেই।'},
+ en:{appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',metricIncome:'Income',metricExpense:'Expense',metricBalance:'Balance',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
 };
 let currentLang=localStorage.getItem(LANG_KEY)||'bn';
 function tr(key){return translations[currentLang][key]||translations.bn[key]||key}
@@ -142,12 +150,31 @@ $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').v
 entries.unshift({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,note:$('note').value.trim()});
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
 function filtered(){return entries.filter(x=>(!$('fromDate').value||x.date>=$('fromDate').value)&&(!$('toDate').value||x.date<=$('toDate').value)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id))}
+let selectedMonthMetric='income';
+function updateMonthSummary(){
+ const m=$('reportMonth').value;
+ const arr=entries.filter(x=>m&&x.date.startsWith(m));
+ const income=arr.filter(x=>x.type==='income').reduce((sum,x)=>sum+x.amount,0);
+ const expense=arr.filter(x=>x.type==='expense').reduce((sum,x)=>sum+x.amount,0);
+ const values={income,expense,balance:income-expense};
+ const labels={income:'metricIncome',expense:'metricExpense',balance:'metricBalance'};
+ $('monthSummary').textContent=tr(labels[selectedMonthMetric])+' : '+money(values[selectedMonthMetric]);
+ document.querySelectorAll('[data-metric]').forEach(btn=>{
+  const active=btn.dataset.metric===selectedMonthMetric;
+  btn.classList.toggle('active',active);
+  btn.setAttribute('aria-pressed',String(active));
+ });
+}
+document.querySelectorAll('[data-metric]').forEach(btn=>btn.addEventListener('click',()=>{
+ selectedMonthMetric=btn.dataset.metric;
+ updateMonthSummary();
+}));
 function render(){
 const inc=entries.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=entries.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
 $('totalIncome').textContent=money(inc);$('totalExpense').textContent=money(exp);$('balance').textContent=money(inc-exp);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const list=filtered();$('transactions').innerHTML=list.length?list.map(x=>`<div class="item"><div><b>${esc(categoryLabel(x.category))}</b><small>${esc(x.date)} · ${esc(x.note||tr('noNote'))}</small><div><button type="button" data-edit="${esc(x.id)}">${currentLang==='en'?'Edit':'সম্পাদনা'}</button><button type="button" data-delete="${esc(x.id)}">${currentLang==='en'?'Delete':'মুছুন'}</button></div></div><div class="amt ${x.type==='income'?'income':'expense'}">${x.type==='income'?'+':'−'} ${money(x.amount)}</div></div>`).join(''):`<div class="empty">${tr('noTransactions')}</div>`;
-const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('monthSummary').value=`${tr('reportIncome')} ${money(mi)} | ${tr('reportExpense')} ${money(me)} | ${tr('remaining')} ${money(mi-me)}`;
+updateMonthSummary();
 }
 let editingId=null,deletingId=null;
 function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected}
