@@ -29,7 +29,7 @@ textarea{grid-column:1/-1;resize:vertical}
 .wide{grid-column:1/-1}
 button.primary{background:var(--green);color:white;border:0;border-radius:10px;padding:12px;font:inherit;font-weight:700}
 button.secondary{background:#eaf2f1;color:#24524e;border:0;border-radius:10px;padding:10px;font:inherit}
-.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.actions button{width:100%;min-width:0;white-space:normal;line-height:1.35}.report-summary{background:#f3f7f7;border:1px solid #d7e2e0;border-radius:12px;padding:12px;min-height:58px;overflow-wrap:anywhere;line-height:1.6}.report-actions{margin-top:12px}.report-note{margin-top:12px;line-height:1.55}@media(max-width:380px){.actions{grid-template-columns:1fr}.panel{padding:13px}}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.report-month{max-width:100%;margin-bottom:14px}.monthly-metric{margin-bottom:12px}.metric-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.metric-tab{border:1px solid #d7e2e0;background:#eaf2f1;color:#24524e;border-radius:12px;padding:13px 8px;font:inherit;font-weight:700;cursor:pointer}.metric-tab.active{background:var(--green);color:white;border-color:var(--green)}.report-summary{font-size:19px;font-weight:700;min-height:68px;display:flex;align-items:center;padding:14px 16px}.report-actions{grid-template-columns:1fr;margin-top:14px}.report-actions button{padding:14px 10px;font-size:16px}.actions button{width:100%;min-width:0;white-space:normal;line-height:1.35}.report-summary{background:#f3f7f7;border:1px solid #d7e2e0;border-radius:12px;padding:12px;min-height:58px;overflow-wrap:anywhere;line-height:1.6}.report-actions{margin-top:12px}.report-note{margin-top:12px;line-height:1.55}@media(max-width:380px){.actions{grid-template-columns:1fr}.panel{padding:13px}.metric-tab{padding:12px 5px;font-size:14px}}
 .item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f0}
 .item:last-child{border:0}.item b{display:block}.item small{color:var(--muted)}
 .item .amt{font-weight:700;white-space:nowrap}.item button{border:0;background:none;color:var(--red);padding:4px 6px}
@@ -85,10 +85,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </section>
 <section id="report" class="panel hidden">
 <h2 data-i18n="reportBackup">রিপোর্ট ও ডেটা ব্যাকআপ</h2>
-<div class="filters">
-<div><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
-<div><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><div id="monthSummary" class="report-summary" aria-live="polite">—</div></div>
-</div>
+<div class="report-month"><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
+<div class="monthly-metric"><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><div class="metric-tabs" role="group" aria-label="মাসের হিসাবের ধরন"><button type="button" class="metric-tab active" data-metric="income" data-i18n="reportIncome">আয়</button><button type="button" class="metric-tab" data-metric="expense" data-i18n="reportExpense">খরচ</button><button type="button" class="metric-tab" data-metric="balance" data-i18n="remaining">অবশিষ্ট</button></div><div id="monthSummary" class="report-summary" aria-live="polite">—</div></div>
 <div class="actions report-actions">
 <button class="primary" id="csvBtn" type="button">CSV রিপোর্ট ডাউনলোড</button>
 <button class="secondary" id="excelBtn" type="button">Excel (.xls) ডাউনলোড</button>
@@ -228,12 +226,14 @@ entries.push({id:Date.now().toString(),type:$('type').value,date:$('date').value
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
 function filtered(){const list=entries.filter(x=>(!$('fromDate').value||x.date>=$('fromDate').value)&&(!$('toDate').value||x.date<=$('toDate').value));const incomeOrder=['বেতন','ব্যবসা','ফ্রিল্যান্স / অতিরিক্ত আয়','উপহার','অন্যান্য'];return list.sort((a,b)=>{if(a.type!==b.type)return a.type==='income'?-1:1;if(a.type==='income'){const ai=incomeOrder.indexOf(a.category),bi=incomeOrder.indexOf(b.category);if(ai!==bi)return (ai<0?99:ai)-(bi<0?99:bi)}return a.date.localeCompare(b.date)||String(a.id).localeCompare(String(b.id))})}
 function transactionItem(x,esc){const label=categoryLabel(x.category)+(x.subcategory?' — '+subcategoryLabel(x.subcategory):'');return '<div class="item"><div><b>'+esc(label)+'</b><small class="item-date">'+esc(formatDate(x.date))+' · '+esc(x.note||tr('noNote'))+'</small><div><button type="button" data-edit="'+esc(x.id)+'">'+(currentLang==='en'?'Edit':'সম্পাদনা')+'</button><button type="button" data-delete="'+esc(x.id)+'">'+(currentLang==='en'?'Delete':'মুছুন')+'</button></div></div><div class="amt '+(x.type==='income'?'income':'expense')+'">'+(x.type==='income'?'+':'−')+' '+money(x.amount)+'</div></div>'}
+let selectedReportMetric='income';
+document.querySelectorAll('.metric-tab').forEach(b=>b.addEventListener('click',()=>{selectedReportMetric=b.dataset.metric;render()}));
 function render(){
 const inc=entries.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=entries.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
 $('totalIncome').textContent=money(inc);$('totalExpense').textContent=money(exp);$('balance').textContent=money(inc-exp);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const list=filtered(),incomeList=list.filter(x=>x.type==='income'),expenseList=list.filter(x=>x.type==='expense');$('transactions').innerHTML=list.length?((incomeList.length?'<div class="history-group"><div class="section-heading">'+tr('incomeSection')+'</div>'+incomeList.map(x=>transactionItem(x,esc)).join('')+'</div>':'')+(expenseList.length?'<div class="history-group"><div class="section-heading expense-heading">'+tr('expenseSection')+'</div>'+expenseList.map(x=>transactionItem(x,esc)).join('')+'</div>':'')):`<div class="empty">${tr('noTransactions')}</div>`;
-const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('monthSummary').textContent=`${tr('reportIncome')} ${money(mi)} | ${tr('reportExpense')} ${money(me)} | ${tr('remaining')} ${money(mi-me)}`;
+const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0),metric=selectedReportMetric||'income';const metricData={income:{label:tr('reportIncome'),value:mi},expense:{label:tr('reportExpense'),value:me},balance:{label:tr('remaining'),value:mi-me}}[metric];$('monthSummary').textContent=metricData.label+' : '+money(metricData.value);document.querySelectorAll('.metric-tab').forEach(b=>b.classList.toggle('active',b.dataset.metric===metric));
 }
 let editingId=null,deletingId=null;
 function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected;fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap')}
