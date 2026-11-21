@@ -24,7 +24,7 @@ jobs:
           html = p.read_text(encoding="utf-8")
           marker = '<style id="ios-hide-financial-tab">[data-tab="finance"],#finance{display:none!important}</style>'
           if marker not in html:
-              html = html.replace("</head>", marker + "\\n</head>", 1)
+              html = html.replace("</head>", marker + "\n</head>", 1)
           p.write_text(html, encoding="utf-8")
           PY
           cd dist
