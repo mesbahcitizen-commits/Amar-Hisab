@@ -10,6 +10,13 @@ Prepare a tested, free personal-finance app release for APK distribution and Goo
 - Do not overwrite user records during upgrades. Current records are stored locally in the WebView browser storage; backup/restore compatibility must be tested before release.
 - Verify signing-key continuity before promising seamless APK upgrades. The current workflow builds a debug APK; Play Store publishing requires a properly signed release App Bundle.
 
+## v2.1 changes in progress
+- Profile photo upload and local persistence in the top-left app header.
+- Nested expense categories for Market and Medical.
+- Day-month-year date display in transaction history and exports.
+- Income-first transaction history; income grouped by category and date ascending, followed by expenses in date-ascending order.
+- Responsive web interface for mobile and desktop, with an installable offline PWA for iOS Safari and desktop browsers.
+
 ## Planned modules
 
 ### 1. Accounts and transfers
