@@ -206,8 +206,8 @@ $('profileImageInput').addEventListener('change',e=>{const file=e.target.files&&
 const KEY='amarHisab_v1';
 const cats={expense:['খাবার','বাজার','যাতায়াত','বাসা ভাড়া','চিকিৎসা','বিদ্যুৎ / গ্যাস / পানি','শিক্ষা','বিনোদন','কেনাকাটা','অন্যান্য'],income:['বেতন','ব্যবসা','ফ্রিল্যান্স / অতিরিক্ত আয়','উপহার','অন্যান্য']};
 const catsEn={expense:['Food','Groceries','Transport','House Rent','Medical','Electricity / Gas / Water','Education','Entertainment','Shopping','Others'],income:['Salary','Business','Freelance / Extra Income','Gift','Others']};
-const subcats={'বাজার':['মুরগি মাংস','গরুর গোস্ত','মাছ','কাঁচা তরকারি','চাল','তৈল'],'চিকিৎসা':['ডাক্তার ভিজিট','টেস্ট খরচ','ঔষধ']};
-const subcatsEn={'মুরগি মাংস':'Chicken','গরুর গোস্ত':'Beef','মাছ':'Fish','কাঁচা তরকারি':'Fresh vegetables','চাল':'Rice','তৈল':'Cooking oil','ডাক্তার ভিজিট':'Doctor visit','টেস্ট খরচ':'Medical tests','ঔষধ':'Medicine'};
+const subcats={'বাজার':['মাছ','ডিম','চাল','মুরগির মাংস','গরুর গোস্ত','কাঁচা তরকারি','অন্যান্য'],'চিকিৎসা':['ডাক্তার ফী','টেস্ট খরচ','ঔষধ খরচ','অন্যান্য']};
+const subcatsEn={'মাছ':'Fish','ডিম':'Eggs','চাল':'Rice','মুরগির মাংস':'Chicken','গরুর গোস্ত':'Beef','কাঁচা তরকারি':'Fresh vegetables','অন্যান্য':'Others','ডাক্তার ফী':'Doctor fee','টেস্ট খরচ':'Test expenses','ঔষধ খরচ':'Medicine expenses'};
 function categoryLabel(value){const bi=[...cats.expense,...cats.income],en=[...catsEn.expense,...catsEn.income];const i=bi.indexOf(value);return currentLang==='en'&&i>=0?en[i]:value;}
 function subcategoryLabel(value){return currentLang==='en'?(subcatsEn[value]||value):value;}
 function fillSubcategories(parent,selectId,wrapId,selected=''){const list=subcats[parent]||[],select=$(selectId),wrap=$(wrapId);if(!select||!wrap)return;select.innerHTML=list.map(v=>'<option value="'+v.replaceAll('&','&amp;').replaceAll('"','&quot;')+'">'+subcategoryLabel(v)+'</option>').join('');wrap.classList.toggle('visible',list.length>0);if(selected&&list.includes(selected))select.value=selected;}
