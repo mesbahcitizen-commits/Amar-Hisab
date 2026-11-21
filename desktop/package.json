@@ -1,6 +1,6 @@
 {
   "name": "amar-hisab-desktop",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Amar Hisab personal finance desktop app",
   "author": "Amar Hisab",
   "license": "UNLICENSED",
@@ -22,7 +22,7 @@
     },
     "files": [
       "main.js",
-      "../web/**/*"
+      "web/**/*"
     ],
     "extraMetadata": {
       "main": "main.js"
