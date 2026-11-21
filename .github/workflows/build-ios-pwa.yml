@@ -1,0 +1,38 @@
+name: Build Amar Hisab iOS PWA ZIP
+on:
+  push:
+    branches: [feature/amar-hisab-2.0]
+    paths:
+      - 'web/**'
+      - '.github/workflows/build-ios-pwa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package-ios-pwa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Prepare iOS-only app (hide Financial tab)
+        run: |
+          mkdir -p dist/Amar-Hisab-iOS
+          cp -R web/. dist/Amar-Hisab-iOS/
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("dist/Amar-Hisab-iOS/index.html")
+          html = p.read_text(encoding="utf-8")
+          marker = '<style id="ios-hide-financial-tab">[data-tab="finance"],#finance{display:none!important}</style>'
+          if marker not in html:
+              html = html.replace("</head>", marker + "\n</head>", 1)
+          p.write_text(html, encoding="utf-8")
+          PY
+          cd dist
+          zip -r Amar-Hisab-iOS-PWA.zip Amar-Hisab-iOS
+      - name: Upload iOS PWA ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: Amar-Hisab-iOS-PWA
+          path: dist/Amar-Hisab-iOS-PWA.zip
+          if-no-files-found: error
+          retention-days: 30

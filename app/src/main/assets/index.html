@@ -4,13 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
+<meta name="description" content="Amar Hisab — personal income and expense tracker">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>আমার হিসাব</title>
 <style>
 :root{--green:#0f766e;--bg:#f3f7f7;--ink:#172b2a;--muted:#647775;--red:#b42318}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,"Noto Sans Bengali",sans-serif;color:var(--ink)}
 header{background:var(--green);color:white;padding:22px 18px 18px;border-radius:0 0 22px 22px}
 header h1{margin:0;font-size:25px}.header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.language-select{width:auto;min-width:105px;padding:8px;border-radius:9px;border:1px solid #ffffff80;background:#ffffff;color:#164e49;font-size:13px}header p{margin:4px 0 0;opacity:.85;font-size:13px}
-main{max-width:760px;margin:auto;padding:14px}
+main{max-width:1120px;margin:auto;padding:14px}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:-2px}
 .card{background:white;padding:13px 10px;border-radius:14px;box-shadow:0 2px 10px #143b3510}
 .card small{display:block;color:var(--muted);font-size:12px}.card strong{display:block;font-size:17px;margin-top:5px;overflow-wrap:anywhere}
@@ -27,13 +29,16 @@ textarea{grid-column:1/-1;resize:vertical}
 .wide{grid-column:1/-1}
 button.primary{background:var(--green);color:white;border:0;border-radius:10px;padding:12px;font:inherit;font-weight:700}
 button.secondary{background:#eaf2f1;color:#24524e;border:0;border-radius:10px;padding:10px;font:inherit}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.report-month{max-width:100%;margin-bottom:14px}.monthly-metric{margin-bottom:12px}.metric-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.metric-tab{border:1px solid #d7e2e0;background:#eaf2f1;color:#24524e;border-radius:12px;padding:13px 8px;font:inherit;font-weight:700;cursor:pointer}.metric-tab.active{background:var(--green);color:white;border-color:var(--green)}.report-summary{font-size:19px;font-weight:700;min-height:68px;display:flex;align-items:center;padding:14px 16px}.report-actions{grid-template-columns:1fr;margin-top:14px}.report-actions button{padding:14px 10px;font-size:16px}.actions button{width:100%;min-width:0;white-space:normal;line-height:1.35}.report-summary{background:#f3f7f7;border:1px solid #d7e2e0;border-radius:12px;padding:12px;min-height:58px;overflow-wrap:anywhere;line-height:1.6}.report-actions{margin-top:12px}.report-note{margin-top:12px;line-height:1.55}@media(max-width:380px){.actions{grid-template-columns:1fr}.panel{padding:13px}.metric-tab{padding:12px 5px;font-size:14px}}
 .item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f0}
 .item:last-child{border:0}.item b{display:block}.item small{color:var(--muted)}
 .item .amt{font-weight:700;white-space:nowrap}.item button{border:0;background:none;color:var(--red);padding:4px 6px}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .hidden{display:none!important}.muted{color:var(--muted);font-size:13px}.empty{text-align:center;padding:24px;color:var(--muted)}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
+.brand-area{display:flex;align-items:center;gap:10px;min-width:0}.brand-copy{min-width:0}.profile-avatar{position:relative;display:flex;align-items:center;justify-content:center;width:54px;height:54px;flex:0 0 54px;border-radius:50%;overflow:hidden;background:#ffffff30;border:2px solid #ffffffb0;color:white;font-size:22px;font-weight:700;cursor:pointer}.profile-avatar img{width:100%;height:100%;object-fit:cover;display:none}.profile-avatar.has-photo img{display:block}.profile-avatar.has-photo #profileInitial{display:none}.avatar-edit{position:absolute;right:0;bottom:0;background:#fff;color:#0f766e;border-radius:50%;width:19px;height:19px;font-size:12px;line-height:19px;text-align:center}.profile-avatar input{display:none}.subcat-wrap{display:none}.subcat-wrap.visible{display:block}.section-heading{margin:16px 0 4px;padding:9px 11px;border-radius:10px;background:#eaf2f1;color:#24524e;font-weight:700}.section-heading.expense-heading{background:#fff0ef;color:#9c2b24}.item-date{direction:ltr;unicode-bidi:embed}.history-group{margin-bottom:12px}
+@media(min-width:800px){main{padding:24px}.cards{gap:14px}.card{padding:18px}.card strong{font-size:21px}nav{flex-wrap:wrap;overflow:visible}nav button{padding:12px 18px}.panel{padding:22px}#entryForm,#editForm{grid-template-columns:repeat(2,minmax(0,1fr))}.panel h2{font-size:22px}}
+@media(max-width:420px){.profile-avatar{width:46px;height:46px;flex-basis:46px}.brand-area{gap:8px}.brand-copy h1{font-size:22px}.brand-copy p{font-size:11px}}
 
 .modal-backdrop{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:18px;z-index:99}
 .modal-card{width:min(100%,520px);max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:18px;box-shadow:0 12px 40px #0003}
@@ -41,10 +46,11 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .modal-actions button{flex:1}.danger{background:#b42318!important;color:#fff!important}
 
 @media(max-width:420px){.cards{gap:6px}.card{padding:11px 8px}.card strong{font-size:15px}form{grid-template-columns:1fr}.wide,textarea{grid-column:auto}}
+.mobile-no-finance [data-tab="finance"],.mobile-no-finance #finance{display:none!important}
 </style>
 </head>
-<body>
-<header><div class="header-row"><div><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
+<body class="mobile-no-finance">
+<header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
 <main>
 <section class="cards">
  <div class="card"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
@@ -55,14 +61,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <button class="active" data-tab="entry" data-i18n="newEntry">নতুন এন্ট্রি</button>
 <button data-tab="history" data-i18n="history">লেনদেনের তালিকা</button>
 <button data-tab="report" data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</button>
+<button data-tab="finance" data-i18n="financeTab">ব্যাংক, বিকাশ, নগদ ও লোন</button>
 </nav>
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
 <form id="entryForm">
 <div><label data-i18n="type">ধরন</label><select id="type"><option value="expense" data-i18n="expense">খরচ</option><option value="income" data-i18n="income">আয়</option></select></div>
-<div><label data-i18n="date">তারিখ</label><input id="date" type="date" required></div>
+<div><label data-i18n="date">তারিখ (দিন-মাস-বছর)</label><input id="date" type="date" required></div>
 <div><label data-i18n="amount">পরিমাণ (টাকা)</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="যেমন ৫০০" data-i18n-placeholder="amountPlaceholder" required></div>
 <div><label data-i18n="category">ক্যাটাগরি</label><select id="category"></select></div>
+<div id="subcategoryWrap" class="subcat-wrap"><label data-i18n="subcategory">উপ-ক্যাটাগরি</label><select id="subcategory"></select></div>
 <textarea id="note" rows="2" placeholder="বিবরণ / নোট (ঐচ্ছিক)" data-i18n-placeholder="notePlaceholder"></textarea>
 <button class="primary wide" type="submit" data-i18n="saveTransaction">হিসাব সংরক্ষণ করুন</button>
 </form>
@@ -78,17 +86,86 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </section>
 <section id="report" class="panel hidden">
 <h2 data-i18n="reportBackup">রিপোর্ট ও ডেটা ব্যাকআপ</h2>
-<div class="filters">
-<div><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
-<div><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><input id="monthSummary" readonly value="—"></div>
+<div class="report-month"><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
+<div class="monthly-metric"><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><div class="metric-tabs" role="group" aria-label="মাসের হিসাবের ধরন"><button type="button" class="metric-tab active" data-metric="income" data-i18n="reportIncome">আয়</button><button type="button" class="metric-tab" data-metric="expense" data-i18n="reportExpense">খরচ</button><button type="button" class="metric-tab" data-metric="balance" data-i18n="remaining">অবশিষ্ট</button></div><div id="monthSummary" class="report-summary" aria-live="polite">—</div></div>
+<div class="actions report-actions">
+<button class="primary" id="csvBtn" type="button">CSV রিপোর্ট ডাউনলোড</button>
+<button class="secondary" id="excelBtn" type="button">Excel (.xls) ডাউনলোড</button>
+<button class="secondary" id="pdfBtn" type="button">PDF রিপোর্ট / Print</button>
+<button class="secondary" id="backupBtn" type="button">Backup নিন (JSON)</button>
+<button class="secondary" id="restoreBtn" type="button">Backup Restore</button>
+<input class="hidden" id="restoreFile" type="file" accept=".json,application/json">
 </div>
-<div class="actions">
-<button class="primary" id="csvBtn" data-i18n="downloadCsv">CSV রিপোর্ট ডাউনলোড</button>
-<button class="secondary" id="backupBtn" data-i18n="takeBackup">Backup নিন</button>
-<button class="secondary" id="restoreBtn" data-i18n="restoreBackup">Backup Restore</button>
-<input class="hidden" id="restoreFile" type="file" accept="application/json">
-</div>
-<p class="muted" data-i18n="backupHelp">আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।</p>
+<p class="muted report-note" data-i18n="backupHelp">আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।</p>
+<p id="reportStatus" class="muted" role="status" aria-live="polite">ফাইল ফোনের Downloads ফোল্ডারে সংরক্ষণ হবে। Restore-এর জন্য ফোন থেকে JSON Backup নির্বাচন করুন।</p>
+</section>
+
+
+<section id="finance" class="panel hidden">
+ <h2>Bank, bKash, Nagad & Loan Management</h2>
+ <p class="muted">Account movements are transfers, not income or expenses. Enter transactions manually; this app does not connect to financial institutions.</p>
+ <h3>Accounts</h3>
+ <form id="accountForm">
+  <div><label>Account type</label><select id="accountType"><option value="cash">Cash</option><option value="bank">Bank</option><option value="bkash">bKash</option><option value="nagad">Nagad</option></select></div>
+  <div><label>Account name</label><input id="accountName" required placeholder="e.g. Salary Account"></div>
+  <div><label>Account identifier (optional)</label><input id="accountNumber" placeholder="Last 4 digits / nickname"></div>
+  <div><label>Opening balance (BDT)</label><input id="accountOpening" type="number" min="0" step="0.01" value="0" required></div>
+  <button class="primary wide" type="submit">Add Account</button>
+ </form>
+ <div id="accountList"></div>
+ <hr>
+ <h3>Deposit, Withdrawal & Transfer</h3>
+ <form id="movementForm">
+  <div><label>Action</label><select id="movementType"><option value="deposit">Deposit</option><option value="withdrawal">Withdrawal</option><option value="transfer">Transfer</option></select></div>
+  <div><label>Amount (BDT)</label><input id="movementAmount" type="number" min="0.01" step="0.01" required></div>
+  <div><label>From / Account</label><select id="movementFrom" required></select></div>
+  <div id="movementToWrap" class="hidden"><label>To Account</label><select id="movementTo"></select></div>
+  <div><label>Date</label><input id="movementDate" type="date" required></div>
+  <textarea id="movementNote" rows="2" placeholder="Note / reference (optional)"></textarea>
+  <button class="primary wide" type="submit">Save Account Transaction</button>
+ </form>
+ <div id="movementList"></div>
+ <hr>
+ <h3>Loans</h3>
+ <form id="loanForm">
+  <div><label>Loan provider / person</label><input id="loanLender" required></div>
+  <div><label>Loan purpose</label><input id="loanPurpose" required placeholder="e.g. Home, education, emergency"></div>
+  <div><label>Principal (BDT)</label><input id="loanPrincipal" type="number" min="0.01" step="0.01" required></div>
+  <div><label>Date received</label><input id="loanDate" type="date" required></div>
+  <div><label>Interest rate (% per year, optional)</label><input id="loanRate" type="number" min="0" step="0.01" value="0"></div>
+  <div><label>Note (optional)</label><input id="loanNote"></div>
+  <div class="wide"><label>Loan credited to account</label><select id="loanAccount" required></select></div>
+  <button class="primary wide" type="submit">Record Loan Received</button>
+ </form>
+ <div id="loanList"></div>
+ <form id="repaymentForm" class="hidden">
+  <h3 class="wide">Record Loan Repayment</h3>
+  <div><label>Loan</label><select id="repaymentLoan" required></select></div>
+  <div><label>Principal repaid (BDT)</label><input id="repaymentPrincipal" type="number" min="0" step="0.01" value="0" required></div>
+  <div><label>Interest / charge paid (BDT)</label><input id="repaymentInterest" type="number" min="0" step="0.01" value="0" required></div>
+  <div><label>Payment date</label><input id="repaymentDate" type="date" required></div>
+  <div><label>Paid from account</label><select id="repaymentAccount" required></select></div>
+  <button class="primary wide" type="submit">Save Repayment</button>
+ </form>
+ <div id="repaymentList"></div>
+ <hr>
+ <h3>EMI Schedule</h3>
+ <form id="emiPlanForm" class="hidden">
+  <div><label>Loan</label><select id="emiLoan" required></select></div>
+  <div><label>Installment amount (BDT)</label><input id="emiAmount" type="number" min="0.01" step="0.01" required></div>
+  <div><label>Number of installments</label><input id="emiCount" type="number" min="1" max="600" step="1" required></div>
+  <div><label>First due date</label><input id="emiFirstDate" type="date" required></div>
+  <button class="primary wide" type="submit">Create EMI Schedule</button>
+ </form>
+ <div id="emiPlanList"></div>
+ <form id="emiPaymentForm" class="hidden">
+  <h3 class="wide">Record EMI Payment</h3>
+  <div><label>EMI plan</label><select id="emiPaymentPlan" required></select></div>
+  <div><label>Payment account</label><select id="emiPaymentAccount" required></select></div>
+  <div><label>Payment date</label><input id="emiPaymentDate" type="date" required></div>
+  <button class="primary wide" type="submit">Pay Next EMI Installment</button>
+ </form>
+ <div id="emiPaymentList"></div>
 </section>
 
 <div id="editModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
@@ -96,9 +173,10 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
   <h2 id="editTitle" data-i18n="editTransaction">লেনদেন সম্পাদনা</h2>
   <form id="editForm">
    <div><label data-i18n="type">ধরন</label><select id="editType"><option value="expense" data-i18n="expense">খরচ</option><option value="income" data-i18n="income">আয়</option></select></div>
-   <div><label data-i18n="date">তারিখ</label><input id="editDate" type="date" required></div>
+   <div><label data-i18n="date">তারিখ (দিন-মাস-বছর)</label><input id="editDate" type="date" required></div>
    <div><label data-i18n="amount">পরিমাণ (টাকা)</label><input id="editAmount" type="number" min="0.01" step="0.01" required></div>
    <div><label data-i18n="category">ক্যাটাগরি</label><select id="editCategory"></select></div>
+   <div id="editSubcategoryWrap" class="subcat-wrap"><label data-i18n="subcategory">উপ-ক্যাটাগরি</label><select id="editSubcategory"></select></div>
    <textarea id="editNote" rows="2" placeholder="বিবরণ / নোট (ঐচ্ছিক)" data-i18n-placeholder="notePlaceholder"></textarea>
    <div class="modal-actions wide"><button class="primary" type="submit" data-i18n="saveChanges">পরিবর্তন সংরক্ষণ</button><button class="secondary" type="button" id="cancelEdit" data-i18n="cancel">বাতিল</button></div>
   </form>
@@ -115,53 +193,113 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 const LANG_KEY='amarHisab_language';
 const $=id=>document.getElementById(id);
 const translations={
- bn:{appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'বর্তমান হিসাবের সঙ্গে Backup-এর হিসাব যোগ করবেন?',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয়।'},
- en:{appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
+ bn:{appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ (দিন-মাস-বছর)',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',subcategory:'উপ-ক্যাটাগরি',incomeSection:'আয়ের হিসাব',expenseSection:'খরচের হিসাব',profilePicture:'প্রোফাইল ছবি',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'বর্তমান হিসাবের সঙ্গে Backup-এর হিসাব যোগ করবেন?',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয়।'},
+ en:{appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date (DD-MM-YYYY)',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',subcategory:'Subcategory',incomeSection:'Income',expenseSection:'Expenses',profilePicture:'Profile picture',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
 };
 let currentLang=localStorage.getItem(LANG_KEY)||'bn';
 function tr(key){return translations[currentLang][key]||translations.bn[key]||key}
-function applyLanguage(){document.documentElement.lang=currentLang;$('languageSelect').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;el.textContent=tr(k)});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));$('type').options[0].text=tr('expense');$('type').options[1].text=tr('income');$('editType').options[0].text=tr('expense');$('editType').options[1].text=tr('income');updateCats();if(editingId!==null){const x=entries.find(e=>e.id===editingId);if(x)fillEditCats(x.category)}render()}
+function applyLanguage(){document.documentElement.lang=currentLang;$('languageSelect').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;el.textContent=tr(k)});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));$('type').options[0].text=tr('expense');$('type').options[1].text=tr('income');$('editType').options[0].text=tr('expense');$('editType').options[1].text=tr('income');updateCats();fillSubcategories($('category').value,'subcategory','subcategoryWrap',$('subcategory').value);if(editingId!==null){const x=entries.find(e=>e.id===editingId);if(x){fillEditCats(x.category);fillSubcategories(x.category,'editSubcategory','editSubcategoryWrap',x.subcategory)}}render()}
 $('languageSelect').addEventListener('change',e=>{currentLang=e.target.value;localStorage.setItem(LANG_KEY,currentLang);applyLanguage()});
+const PROFILE_KEY='amarHisab_profile_picture_v1';
+function showProfilePicture(data){const img=$('profileImage'),avatar=$('profileAvatar');if(data){img.src=data;avatar.classList.add('has-photo')}else{img.removeAttribute('src');avatar.classList.remove('has-photo')}}
+showProfilePicture(localStorage.getItem(PROFILE_KEY));
+$('profileImageInput').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;if(!file.type.startsWith('image/')){alert(currentLang==='en'?'Please select an image file.':'অনুগ্রহ করে একটি ছবি নির্বাচন করুন।');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const image=new Image();image.onload=()=>{const scale=Math.min(1,384/Math.max(image.width,image.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(image.width*scale));canvas.height=Math.max(1,Math.round(image.height*scale));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',0.82);try{localStorage.setItem(PROFILE_KEY,data);showProfilePicture(data)}catch(err){alert(currentLang==='en'?'Could not save this picture. Try a smaller image.':'ছবিটি সংরক্ষণ করা যায়নি। ছোট ছবি ব্যবহার করুন।')}};image.src=reader.result};reader.readAsDataURL(file);e.target.value=''});
 const KEY='amarHisab_v1';
 const cats={expense:['খাবার','বাজার','যাতায়াত','বাসা ভাড়া','চিকিৎসা','বিদ্যুৎ / গ্যাস / পানি','শিক্ষা','বিনোদন','কেনাকাটা','অন্যান্য'],income:['বেতন','ব্যবসা','ফ্রিল্যান্স / অতিরিক্ত আয়','উপহার','অন্যান্য']};
 const catsEn={expense:['Food','Groceries','Transport','House Rent','Medical','Electricity / Gas / Water','Education','Entertainment','Shopping','Others'],income:['Salary','Business','Freelance / Extra Income','Gift','Others']};
+const subcats={'বাজার':['মাছ','ডিম','চাল','মুরগির মাংস','গরুর গোস্ত','কাঁচা তরকারি','অন্যান্য'],'চিকিৎসা':['ডাক্তার ফী','টেস্ট খরচ','ঔষধ খরচ','অন্যান্য']};
+const subcatsEn={'মাছ':'Fish','ডিম':'Eggs','চাল':'Rice','মুরগির মাংস':'Chicken','গরুর গোস্ত':'Beef','কাঁচা তরকারি':'Fresh vegetables','অন্যান্য':'Others','ডাক্তার ফী':'Doctor fee','টেস্ট খরচ':'Test expenses','ঔষধ খরচ':'Medicine expenses'};
 function categoryLabel(value){const bi=[...cats.expense,...cats.income],en=[...catsEn.expense,...catsEn.income];const i=bi.indexOf(value);return currentLang==='en'&&i>=0?en[i]:value;}
+function subcategoryLabel(value){return currentLang==='en'?(subcatsEn[value]||value):value;}
+function fillSubcategories(parent,selectId,wrapId,selected=''){const list=subcats[parent]||[],select=$(selectId),wrap=$(wrapId);if(!select||!wrap)return;select.innerHTML=list.map(v=>'<option value="'+v.replaceAll('&','&amp;').replaceAll('"','&quot;')+'">'+subcategoryLabel(v)+'</option>').join('');wrap.classList.toggle('visible',list.length>0);if(selected&&list.includes(selected))select.value=selected;}
 let entries=JSON.parse(localStorage.getItem(KEY)||'[]');
 const money=n=>(currentLang==='en'?'৳ ':'৳ ')+Number(n||0).toLocaleString(currentLang==='en'?'en-BD':'bn-BD',{maximumFractionDigits:2});
-const today=new Date().toISOString().slice(0,10);
+function localISODate(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day}
+function formatDate(value){const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?m[3]+'-'+m[2]+'-'+m[1]:String(value||'')}
+const today=localISODate();
 $('date').value=today;$('reportMonth').value=today.slice(0,7);
 function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
-function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('')}
-$('type').addEventListener('change',updateCats);updateCats();
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
+function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('');fillSubcategories($('category').value,'subcategory','subcategoryWrap')}
+$('type').addEventListener('change',updateCats);$('category').addEventListener('change',()=>fillSubcategories($('category').value,'subcategory','subcategoryWrap'));updateCats();
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report','finance'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
 $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').value);if(!(amount>0))return;
-entries.unshift({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,note:$('note').value.trim()});
+entries.push({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,subcategory:$('subcategory').value||'',note:$('note').value.trim()});
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
-function filtered(){return entries.filter(x=>(!$('fromDate').value||x.date>=$('fromDate').value)&&(!$('toDate').value||x.date<=$('toDate').value)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id))}
+function filtered(){const list=entries.filter(x=>(!$('fromDate').value||x.date>=$('fromDate').value)&&(!$('toDate').value||x.date<=$('toDate').value));const incomeOrder=['বেতন','ব্যবসা','ফ্রিল্যান্স / অতিরিক্ত আয়','উপহার','অন্যান্য'];return list.sort((a,b)=>{if(a.type!==b.type)return a.type==='income'?-1:1;if(a.type==='income'){const ai=incomeOrder.indexOf(a.category),bi=incomeOrder.indexOf(b.category);if(ai!==bi)return (ai<0?99:ai)-(bi<0?99:bi)}return a.date.localeCompare(b.date)||String(a.id).localeCompare(String(b.id))})}
+function transactionItem(x,esc){const label=categoryLabel(x.category)+(x.subcategory?' — '+subcategoryLabel(x.subcategory):'');return '<div class="item"><div><b>'+esc(label)+'</b><small class="item-date">'+esc(formatDate(x.date))+' · '+esc(x.note||tr('noNote'))+'</small><div><button type="button" data-edit="'+esc(x.id)+'">'+(currentLang==='en'?'Edit':'সম্পাদনা')+'</button><button type="button" data-delete="'+esc(x.id)+'">'+(currentLang==='en'?'Delete':'মুছুন')+'</button></div></div><div class="amt '+(x.type==='income'?'income':'expense')+'">'+(x.type==='income'?'+':'−')+' '+money(x.amount)+'</div></div>'}
+let selectedReportMetric='income';
+document.querySelectorAll('.metric-tab').forEach(b=>b.addEventListener('click',()=>{selectedReportMetric=b.dataset.metric;render()}));
 function render(){
 const inc=entries.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=entries.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
 $('totalIncome').textContent=money(inc);$('totalExpense').textContent=money(exp);$('balance').textContent=money(inc-exp);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const list=filtered();$('transactions').innerHTML=list.length?list.map(x=>`<div class="item"><div><b>${esc(categoryLabel(x.category))}</b><small>${esc(x.date)} · ${esc(x.note||tr('noNote'))}</small><div><button type="button" data-edit="${esc(x.id)}">${currentLang==='en'?'Edit':'সম্পাদনা'}</button><button type="button" data-delete="${esc(x.id)}">${currentLang==='en'?'Delete':'মুছুন'}</button></div></div><div class="amt ${x.type==='income'?'income':'expense'}">${x.type==='income'?'+':'−'} ${money(x.amount)}</div></div>`).join(''):`<div class="empty">${tr('noTransactions')}</div>`;
-const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('monthSummary').value=`${tr('reportIncome')} ${money(mi)} | ${tr('reportExpense')} ${money(me)} | ${tr('remaining')} ${money(mi-me)}`;
+const list=filtered(),incomeList=list.filter(x=>x.type==='income'),expenseList=list.filter(x=>x.type==='expense');$('transactions').innerHTML=list.length?((incomeList.length?'<div class="history-group"><div class="section-heading">'+tr('incomeSection')+'</div>'+incomeList.map(x=>transactionItem(x,esc)).join('')+'</div>':'')+(expenseList.length?'<div class="history-group"><div class="section-heading expense-heading">'+tr('expenseSection')+'</div>'+expenseList.map(x=>transactionItem(x,esc)).join('')+'</div>':'')):`<div class="empty">${tr('noTransactions')}</div>`;
+const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0),metric=selectedReportMetric||'income';const metricData={income:{label:tr('reportIncome'),value:mi},expense:{label:tr('reportExpense'),value:me},balance:{label:tr('remaining'),value:mi-me}}[metric];$('monthSummary').textContent=metricData.label+' : '+money(metricData.value);document.querySelectorAll('.metric-tab').forEach(b=>b.classList.toggle('active',b.dataset.metric===metric));
 }
 let editingId=null,deletingId=null;
-function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected}
-window.editEntry=id=>{const x=entries.find(e=>e.id===id);if(!x)return;editingId=id;$('editType').value=x.type;$('editDate').value=x.date;$('editAmount').value=x.amount;$('editNote').value=x.note||'';fillEditCats(x.category);$('editModal').classList.remove('hidden')};
+function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected;fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap')}
+window.editEntry=id=>{const x=entries.find(e=>e.id===id);if(!x)return;editingId=id;$('editType').value=x.type;$('editDate').value=x.date;$('editAmount').value=x.amount;$('editNote').value=x.note||'';fillEditCats(x.category);fillSubcategories(x.category,'editSubcategory','editSubcategoryWrap',x.subcategory);$('editModal').classList.remove('hidden')};
 window.deleteEntry=id=>{if(!entries.some(e=>e.id===id))return;deletingId=id;$('deleteModal').classList.remove('hidden')};
-$('editType').addEventListener('change',()=>fillEditCats());
-$('editForm').onsubmit=e=>{e.preventDefault();const x=entries.find(e=>e.id===editingId);const amount=Number($('editAmount').value);if(!x||!(amount>0)||!$('editDate').value){return}x.type=$('editType').value;x.date=$('editDate').value;x.amount=amount;x.category=$('editCategory').value;x.note=$('editNote').value.trim();$('editModal').classList.add('hidden');editingId=null;save();};
+$('editType').addEventListener('change',()=>fillEditCats());$('editCategory').addEventListener('change',()=>fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap'));
+$('editForm').onsubmit=e=>{e.preventDefault();const x=entries.find(e=>e.id===editingId);const amount=Number($('editAmount').value);if(!x||!(amount>0)||!$('editDate').value){return}x.type=$('editType').value;x.date=$('editDate').value;x.amount=amount;x.category=$('editCategory').value;x.subcategory=$('editSubcategory').value||'';x.note=$('editNote').value.trim();$('editModal').classList.add('hidden');editingId=null;save();};
 $('cancelEdit').onclick=()=>{$('editModal').classList.add('hidden');editingId=null};
 $('confirmDelete').onclick=()=>{if(deletingId!==null){entries=entries.filter(x=>x.id!==deletingId);deletingId=null;save()}$('deleteModal').classList.add('hidden')};
 $('cancelDelete').onclick=()=>{deletingId=null;$('deleteModal').classList.add('hidden')};
 $('transactions').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)window.editEntry(edit.dataset.edit);if(del)window.deleteEntry(del.dataset.delete)});
 ['fromDate','toDate','reportMonth'].forEach(id=>$(id).addEventListener('change',render));
-$('csvBtn').onclick=()=>{const rows=[[tr('date'),tr('type'),tr('category'),tr('amount'),currentLang==='en'?'Description':'বিবরণ'],...entries.map(x=>[x.date,x.type==='income'?tr('income'):tr('expense'),x.category,x.amount,x.note])];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'amar-hisab-report.csv')};
-$('backupBtn').onclick=()=>download(new Blob([JSON.stringify({app:'Amar Hisab',version:1,entries},null,2)],{type:'application/json'}),'amar-hisab-backup.json');
+
+function reportData(){const month=$('reportMonth').value||today.slice(0,7),tx=entries.filter(x=>String(x.date||'').startsWith(month)),moves=movements.filter(x=>String(x.date||'').startsWith(month)),inc=tx.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount||0),0),exp=tx.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount||0),0);return {month,tx,moves,inc,exp,accounts,loans,repayments,emiPlans,emiPayments}}
+const reportEsc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function reportTables(d){const trRows=d.tx.map(x=>'<tr><td>'+reportEsc(formatDate(x.date))+'</td><td>'+reportEsc(x.type)+'</td><td>'+reportEsc(x.category+(x.subcategory?' — '+x.subcategory:''))+'</td><td>'+reportEsc(x.amount)+'</td><td>'+reportEsc(x.note)+'</td></tr>').join(''),moveRows=d.moves.map(x=>'<tr><td>'+reportEsc(x.date)+'</td><td>'+reportEsc(x.kind)+'</td><td>'+reportEsc(x.amount)+'</td><td>'+reportEsc(x.note)+'</td></tr>').join(''),accountRows=d.accounts.map(x=>'<tr><td>'+reportEsc(x.name)+'</td><td>'+reportEsc(x.type)+'</td><td>'+reportEsc(x.opening)+'</td><td>'+reportEsc(accountBalance(x))+'</td></tr>').join(''),loanRows=d.loans.map(x=>'<tr><td>'+reportEsc(x.lender)+'</td><td>'+reportEsc(x.purpose)+'</td><td>'+reportEsc(x.principal)+'</td><td>'+reportEsc(d.repayments.filter(r=>r.loanId===x.id).reduce((s,r)=>s+Number(r.principal||0),0))+'</td></tr>').join(''),emiRows=d.emiPayments.filter(x=>String(x.date||'').startsWith(d.month)).map(x=>'<tr><td>'+reportEsc(x.date)+'</td><td>'+reportEsc(x.installment)+'</td><td>'+reportEsc(x.amount)+'</td></tr>').join('');return {trRows,moveRows,accountRows,loanRows,emiRows}}
+function makeReportHtml(d){const t=reportTables(d);return '<!doctype html><html><head><meta charset="utf-8"><title>Amar Hisab '+d.month+'</title><style>body{font:14px Arial,sans-serif;color:#172b2a;padding:24px}h1,h2{color:#0f766e}table{border-collapse:collapse;width:100%;margin:8px 0 22px}th,td{border:1px solid #ccd8d5;padding:7px;text-align:left}th{background:#eaf2f1}.totals{padding:12px;background:#f3f7f7}</style></head><body><h1>Amar Hisab — '+reportEsc(d.month)+'</h1><div class="totals">Income: ৳ '+d.inc.toFixed(2)+' &nbsp; Expenses: ৳ '+d.exp.toFixed(2)+' &nbsp; Balance: ৳ '+(d.inc-d.exp).toFixed(2)+'</div><h2>Income & Expense Transactions</h2><table><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Note</th></tr>'+t.trRows+'</table><h2>Account Movements</h2><table><tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th></tr>'+t.moveRows+'</table><h2>Accounts & Balances</h2><table><tr><th>Account</th><th>Type</th><th>Opening</th><th>Current balance</th></tr>'+t.accountRows+'</table><h2>Loans</h2><table><tr><th>Lender</th><th>Purpose</th><th>Principal</th><th>Principal repaid</th></tr>'+t.loanRows+'</table><h2>EMI Payments</h2><table><tr><th>Date</th><th>Installment</th><th>Amount</th></tr>'+t.emiRows+'</table></body></html>'}
+function makeExcelHtml(d){const t=reportTables(d);return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><h2>Amar Hisab '+reportEsc(d.month)+'</h2><p>Income: '+d.inc+' | Expenses: '+d.exp+' | Balance: '+(d.inc-d.exp)+'</p><h3>Transactions</h3><table border="1"><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Note</th></tr>'+t.trRows+'</table><h3>Account Movements</h3><table border="1"><tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th></tr>'+t.moveRows+'</table><h3>Accounts</h3><table border="1"><tr><th>Account</th><th>Type</th><th>Opening</th><th>Balance</th></tr>'+t.accountRows+'</table><h3>Loans</h3><table border="1"><tr><th>Lender</th><th>Purpose</th><th>Principal</th><th>Principal repaid</th></tr>'+t.loanRows+'</table><h3>EMI Payments</h3><table border="1"><tr><th>Date</th><th>Installment</th><th>Amount</th></tr>'+t.emiRows+'</table></body></html>'}
+$('csvBtn').onclick=()=>{const d=reportData(),rows=[['Date','Type','Category','Amount','Note'],...d.tx.map(x=>[formatDate(x.date),x.type,x.category+(x.subcategory?' — '+x.subcategory:''),x.amount,x.note]),[],['Movement date','Type','Amount','Note'],...d.moves.map(x=>[formatDate(x.date),x.kind,x.amount,x.note]),[],['Account','Type','Opening','Balance'],...d.accounts.map(x=>[x.name,x.type,x.opening,accountBalance(x)]),[],['Lender','Purpose','Principal','Principal repaid'],...d.loans.map(x=>[x.lender,x.purpose,x.principal,d.repayments.filter(r=>r.loanId===x.id).reduce((s,r)=>s+Number(r.principal||0),0)]),[],['EMI date','Installment','Amount'],...d.emiPayments.filter(x=>String(x.date||'').startsWith(d.month)).map(x=>[formatDate(x.date),x.installment,x.amount])];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'amar-hisab-'+d.month+'.csv')};
+$('excelBtn').onclick=()=>{const d=reportData();download(new Blob(['\uFEFF',makeExcelHtml(d)],{type:'application/vnd.ms-excel;charset=utf-8'}),'amar-hisab-'+d.month+'.xls')};
+$('pdfBtn').onclick=()=>{const d=reportData(),html=makeReportHtml(d);if(window.AndroidBridge&&AndroidBridge.printReport){AndroidBridge.printReport(html)}else{const w=window.open('','_blank');if(!w){alert('Please allow the report window, then print or save as PDF.');return}w.document.write(html);w.document.close();w.focus();w.print()}};
+$('backupBtn').onclick=()=>{const backup={app:'Amar Hisab',version:2,createdAt:new Date().toISOString(),entries,accounts,movements,loans,repayments,emiPlans,emiPayments};download(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}),'amar-hisab-backup-'+today+'.json')};
 $('restoreBtn').onclick=()=>$('restoreFile').click();
-$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.entries))throw Error();if(confirm(tr('backupMerge'))){const ids=new Set(entries.map(x=>x.id));entries=[...entries,...d.entries.filter(x=>!ids.has(x.id))];save();alert(tr('backupDone'))} }catch{alert(tr('invalidBackup'))}e.target.value=''};
-function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=='Amar Hisab'||!Array.isArray(d.entries))throw Error('Invalid backup');if(!confirm(tr('backupMerge')))return;const merge=(cur,inc)=>{const ids=new Set(cur.map(x=>String(x.id)));return cur.concat(inc.filter(x=>x&&x.id!==undefined&&!ids.has(String(x.id))))};entries=merge(entries,d.entries);if(Array.isArray(d.accounts))accounts=merge(accounts,d.accounts);if(Array.isArray(d.movements))movements=merge(movements,d.movements);if(Array.isArray(d.loans))loans=merge(loans,d.loans);if(Array.isArray(d.repayments))repayments=merge(repayments,d.repayments);if(Array.isArray(d.emiPlans))emiPlans=merge(emiPlans,d.emiPlans);if(Array.isArray(d.emiPayments))emiPayments=merge(emiPayments,d.emiPayments);save();persistFinance();$('reportStatus').textContent='Backup restored successfully.';alert(tr('backupDone'))}catch(err){$('reportStatus').textContent='Restore failed: select a valid Amar Hisab JSON backup.';alert(tr('invalidBackup'))}finally{e.target.value=''}};
+function download(blob,name){if(window.AndroidBridge&&AndroidBridge.saveFile){const reader=new FileReader();reader.onload=()=>AndroidBridge.saveFile(name,blob.type||'application/octet-stream',String(reader.result).split(',')[1]||'');reader.readAsDataURL(blob);return}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},1500)}
+
+
+/* Amar Hisab 2.0: account, transfer and loan ledger (manual/offline) */
+const ACCOUNTS_KEY='amarHisab_accounts_v2', MOVES_KEY='amarHisab_movements_v2', LOANS_KEY='amarHisab_loans_v2', REPAYS_KEY='amarHisab_repayments_v2', EMI_PLANS_KEY='amarHisab_emi_plans_v2', EMI_PAYMENTS_KEY='amarHisab_emi_payments_v2';
+let accounts=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'[]');
+let movements=JSON.parse(localStorage.getItem(MOVES_KEY)||'[]');
+let loans=JSON.parse(localStorage.getItem(LOANS_KEY)||'[]');
+let repayments=JSON.parse(localStorage.getItem(REPAYS_KEY)||'[]');
+let emiPlans=JSON.parse(localStorage.getItem(EMI_PLANS_KEY)||'[]');
+let emiPayments=JSON.parse(localStorage.getItem(EMI_PAYMENTS_KEY)||'[]');
+const persistFinance=()=>{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts));localStorage.setItem(MOVES_KEY,JSON.stringify(movements));localStorage.setItem(LOANS_KEY,JSON.stringify(loans));localStorage.setItem(REPAYS_KEY,JSON.stringify(repayments));localStorage.setItem(EMI_PLANS_KEY,JSON.stringify(emiPlans));localStorage.setItem(EMI_PAYMENTS_KEY,JSON.stringify(emiPayments));renderFinance()};
+const fmtBDT=n=>'৳ '+Number(n||0).toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
+function accountBalance(a){return movements.reduce((b,m)=>{if(m.kind==='transfer'){if(m.from===a.id)b-=m.amount;if(m.to===a.id)b+=m.amount}else{if(m.account===a.id)b+=(m.kind==='deposit'?m.amount:-m.amount)}return b},Number(a.opening||0))}
+function refreshAccountSelects(){['movementFrom','movementTo','loanAccount','repaymentAccount','emiPaymentAccount'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=accounts.map(a=>'<option value="'+a.id+'">'+escapeFinance(a.name)+' ('+a.type+')</option>').join('');if(accounts.some(a=>a.id===old))el.value=old});['repaymentLoan','emiLoan'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=loans.map(l=>'<option value="'+l.id+'">'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</option>').join('');if(loans.some(l=>l.id===old))el.value=old});const p=$('emiPaymentPlan');if(p){const old=p.value;p.innerHTML=emiPlans.map(x=>'<option value="'+x.id+'">'+x.count+' installments · '+fmtBDT(x.amount)+'</option>').join('');if(emiPlans.some(x=>x.id===old))p.value=old}}
+function renderFinance(){
+ refreshAccountSelects();
+ $('accountList').innerHTML=accounts.length?accounts.map(a=>'<div class="item"><div><b>'+escapeFinance(a.name)+'</b><small>'+a.type.toUpperCase()+(a.identifier?' · '+escapeFinance(a.identifier):'')+'</small></div><div class="amt">'+fmtBDT(accountBalance(a))+'</div></div>').join(''):'<p class="empty">No accounts added yet.</p>';
+ $('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer');
+ $('movementList').innerHTML=movements.slice().reverse().slice(0,30).map(m=>'<div class="item"><div><b>'+m.kind.toUpperCase()+'</b><small>'+formatDate(m.date)+' · '+escapeFinance(m.note||'')+'</small></div><div class="amt">'+fmtBDT(m.amount)+'</div></div>').join('')||'<p class="empty">No account movements yet.</p>';
+ $('loanList').innerHTML=loans.map(l=>{const paid=repayments.filter(r=>r.loanId===l.id).reduce((s,r)=>s+r.principal,0);return '<div class="item"><div><b>'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</b><small>'+formatDate(l.date)+' · Principal '+fmtBDT(l.principal)+' · Interest '+Number(l.rate||0)+'% p.a.</small></div><div class="amt">Due '+fmtBDT(Math.max(0,l.principal-paid))+'</div></div>'}).join('')||'<p class="empty">No loans recorded yet.</p>';
+ $('repaymentForm').classList.toggle('hidden',!loans.length);
+ $('emiPlanForm').classList.toggle('hidden',!loans.length);
+ $('emiPaymentForm').classList.toggle('hidden',!emiPlans.length);
+ $('emiPlanList').innerHTML=emiPlans.map(p=>{const paid=emiPayments.filter(x=>x.planId===p.id).length;const l=loans.find(x=>x.id===p.loanId);return '<div class="item"><div><b>'+escapeFinance(l?.lender||'Loan')+' EMI</b><small>'+fmtBDT(p.amount)+' × '+p.count+' · First due '+p.firstDate+'</small></div><div class="amt">'+paid+'/'+p.count+' paid</div></div>'}).join('')||'<p class="empty">No EMI schedules created yet.</p>';
+ $('emiPaymentList').innerHTML=emiPayments.slice().reverse().slice(0,30).map(p=>'<div class="item"><div><b>EMI installment '+p.installment+'</b><small>'+formatDate(p.date)+' · '+fmtBDT(p.amount)+'</small></div><div class="amt">Paid</div></div>').join('');
+ $('repaymentList').innerHTML=repayments.slice().reverse().slice(0,30).map(r=>'<div class="item"><div><b>Loan repayment</b><small>'+formatDate(r.date)+' · Principal '+fmtBDT(r.principal)+' · Interest '+fmtBDT(r.interest)+'</small></div><div class="amt">'+fmtBDT(r.principal+r.interest)+'</div></div>').join('');
+}
+function escapeFinance(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('movementType').addEventListener('change',()=>{$('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer')});
+$('accountForm').addEventListener('submit',e=>{e.preventDefault();const name=$('accountName').value.trim(),opening=Number($('accountOpening').value);if(!name||opening<0)return;accounts.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),type:$('accountType').value,name,identifier:$('accountNumber').value.trim(),opening});e.target.reset();$('accountOpening').value='0';persistFinance()});
+$('movementForm').addEventListener('submit',e=>{e.preventDefault();const kind=$('movementType').value,amount=Number($('movementAmount').value),from=$('movementFrom').value,to=$('movementTo').value;if(!(amount>0)||!from)return;if(kind==='transfer'&&(!to||to===from)){alert('Choose two different accounts for a transfer.');return}if(kind!=='deposit'&&kind!=='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}if(kind==='transfer'&&accountBalance(accounts.find(a=>a.id===from))<amount){alert('Insufficient account balance.');return}movements.push({id:String(Date.now()),kind,amount,account:kind==='transfer'?undefined:from,from:kind==='transfer'?from:undefined,to:kind==='transfer'?to:undefined,date:$('movementDate').value,note:$('movementNote').value.trim()});e.target.reset();$('movementDate').value=today;persistFinance()});
+$('loanForm').addEventListener('submit',e=>{e.preventDefault();const principal=Number($('loanPrincipal').value);if(!(principal>0))return;const accountId=$('loanAccount').value;if(!accountId){alert('Please add and select an account to receive the loan.');return}const loanId=String(Date.now());loans.push({id:loanId,lender:$('loanLender').value.trim(),purpose:$('loanPurpose').value.trim(),principal,date:$('loanDate').value,rate:Number($('loanRate').value||0),note:$('loanNote').value.trim(),accountId});movements.push({id:loanId+'-received',kind:'deposit',amount:principal,account:accountId,date:$('loanDate').value,note:'Loan received: '+$('loanLender').value.trim()});e.target.reset();$('loanDate').value=today;$('loanRate').value='0';persistFinance()});
+$('emiPlanForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('emiLoan').value,amount=Number($('emiAmount').value),count=Number($('emiCount').value),firstDate=$('emiFirstDate').value;if(!loans.some(l=>l.id===loanId)||!(amount>0)||!Number.isInteger(count)||count<1||count>600||!firstDate)return;emiPlans.push({id:String(Date.now()),loanId,amount,count,firstDate});e.target.reset();$('emiFirstDate').value=today;persistFinance()});
+$('emiPaymentForm').addEventListener('submit',e=>{e.preventDefault();const planId=$('emiPaymentPlan').value,plan=emiPlans.find(p=>p.id===planId),accountId=$('emiPaymentAccount').value;if(!plan||!accountId)return;const paid=emiPayments.filter(p=>p.planId===planId).length;if(paid>=plan.count){alert('All installments are already paid.');return}const account=accounts.find(a=>a.id===accountId),amount=Number(plan.amount);if(!account||accountBalance(account)<amount){alert('Insufficient account balance.');return}const id=String(Date.now()),date=$('emiPaymentDate').value;emiPayments.push({id,planId,installment:paid+1,amount,date,accountId});movements.push({id:id+'-emi',kind:'withdrawal',amount,account:accountId,date,note:'EMI installment '+(paid+1)});persistFinance()});
+$('repaymentForm').addEventListener('submit',e=>{e.preventDefault();const loanId=$('repaymentLoan').value,principal=Number($('repaymentPrincipal').value),interest=Number($('repaymentInterest').value),loan=loans.find(l=>l.id===loanId);if(!loan||principal<0||interest<0||principal+interest<=0)return;const paid=repayments.filter(r=>r.loanId===loanId).reduce((s,r)=>s+r.principal,0);if(principal>loan.principal-paid){alert('Principal repayment exceeds outstanding loan balance.');return}const accountId=$('repaymentAccount').value,total=principal+interest;if(!accountId||accountBalance(accounts.find(a=>a.id===accountId))<total){alert('Select an account with sufficient balance.');return}const repaymentId=String(Date.now());repayments.push({id:repaymentId,loanId,principal,interest,date:$('repaymentDate').value,accountId});movements.push({id:repaymentId+'-paid',kind:'withdrawal',amount:total,account:accountId,date:$('repaymentDate').value,note:'Loan repayment'});e.target.reset();$('repaymentDate').value=today;persistFinance()});
+$('movementDate').value=today;$('loanDate').value=today;$('repaymentDate').value=today;$('emiFirstDate').value=today;$('emiPaymentDate').value=today;
+
+renderFinance();
 applyLanguage();
 render();
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 </script>
 </body></html>
