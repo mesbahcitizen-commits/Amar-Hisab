@@ -45,9 +45,16 @@ public class MainActivity extends Activity {
                                        FileChooserParams params) {
         if (filePathCallback != null) filePathCallback.onReceiveValue(null);
         filePathCallback = callback;
+        String mimeType = "application/json";
+        String[] accepted = params.getAcceptTypes();
+        if (accepted != null) {
+          for (String type : accepted) {
+            if (type != null && type.startsWith("image/")) { mimeType = "image/*"; break; }
+          }
+        }
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/json");
+        intent.setType(mimeType);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
           startActivityForResult(intent, REQUEST_RESTORE_FILE);
