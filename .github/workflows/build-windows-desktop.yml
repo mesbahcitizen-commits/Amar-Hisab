@@ -19,6 +19,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Copy web app into desktop package
+        shell: pwsh
+        run: Copy-Item -Path web -Destination desktop/web -Recurse -Force
       - name: Install dependencies
         working-directory: desktop
         run: npm install
