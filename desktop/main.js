@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell, dialog } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -16,7 +16,19 @@ function createWindow() {
     }
   });
 
-  win.loadFile(path.join(__dirname, '..', 'web', 'index.html'));
+  // Packaged builds contain the web app inside desktop/web.
+  // During local development, load the repository-level web folder.
+  const indexPath = app.isPackaged
+    ? path.join(__dirname, 'web', 'index.html')
+    : path.join(__dirname, '..', 'web', 'index.html');
+
+  win.loadFile(indexPath).catch((error) => {
+    console.error('Unable to load Amar Hisab:', error);
+    dialog.showErrorBox(
+      'Amar Hisab could not start',
+      `The application files could not be found.\n\nExpected: ${indexPath}\n\n${error.message}`
+    );
+  });
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('https://') || url.startsWith('http://')) shell.openExternal(url);
@@ -28,10 +40,6 @@ function createWindow() {
       event.preventDefault();
       if (url.startsWith('https://') || url.startsWith('http://')) shell.openExternal(url);
     }
-  });
-
-  win.webContents.on('context-menu', (_event, params) => {
-    if (params.isEditable) return;
   });
 }
 
