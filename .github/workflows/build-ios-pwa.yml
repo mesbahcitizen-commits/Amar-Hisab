@@ -14,10 +14,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Package PWA files
+      - name: Prepare iOS-only app (hide Financial tab)
         run: |
           mkdir -p dist/Amar-Hisab-iOS
           cp -R web/. dist/Amar-Hisab-iOS/
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("dist/Amar-Hisab-iOS/index.html")
+          html = p.read_text(encoding="utf-8")
+          marker = '<style id="ios-hide-financial-tab">[data-tab="finance"],#finance{display:none!important}</style>'
+          if marker not in html:
+              html = html.replace("</head>", marker + "\\n</head>", 1)
+          p.write_text(html, encoding="utf-8")
+          PY
           cd dist
           zip -r Amar-Hisab-iOS-PWA.zip Amar-Hisab-iOS
       - name: Upload iOS PWA ZIP
