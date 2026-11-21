@@ -1,0 +1,49 @@
+{
+  "name": "amar-hisab-desktop",
+  "version": "2.1.0",
+  "description": "Amar Hisab personal finance desktop app",
+  "author": "Amar Hisab",
+  "license": "UNLICENSED",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.amarhisab.desktop",
+    "productName": "Amar Hisab",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "../web/**/*"
+    ],
+    "extraMetadata": {
+      "main": "main.js"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Amar-Hisab-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Amar Hisab"
+    }
+  }
+}
