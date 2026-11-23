@@ -276,11 +276,11 @@ function applyFinanceLanguage(){
   'Edit':t.edit,'Delete':t.delete,'Due ':t.due+' ','Paid':t.paid,'Scheduled':t.scheduled,
   'DUE / OVERDUE':t.overdue,'Reminder: One or more EMI installments are due or overdue.':t.reminder,
   'No EMI payments due today.':t.noReminder,'Loan repayment':t.repayment,'EMI installment':t.installment,
-  'Principal ':'মূল টাকা ','Interest rate ':'সুদের হার ','Interest paid ':'পরিশোধিত সুদ ',
-  'Term ':'মেয়াদ ','months':'মাস','Next due ':'পরবর্তী কিস্তির তারিখ ',
-  'Charge ':'চার্জ ','Maturity ':'মেয়াদপূর্তি ','Rate ':'হার ',
+  'Principal ':currentLang==='bn'?'মূল টাকা ':'Principal ','Interest rate ':currentLang==='bn'?'সুদের হার ':'Interest rate ','Interest paid ':currentLang==='bn'?'পরিশোধিত সুদ ':'Interest paid ',
+  'Term ':currentLang==='bn'?'মেয়াদ ':'Term ','months':currentLang==='bn'?'মাস':'months','Next due ':currentLang==='bn'?'পরবর্তী কিস্তির তারিখ ':'Next due ',
+  'Charge ':currentLang==='bn'?'চার্জ ':'Charge ','Maturity ':currentLang==='bn'?'মেয়াদপূর্তি ':'Maturity ','Rate ':currentLang==='bn'?'হার ':'Rate ',
   'Monthly':t.monthly,'Yearly':t.yearly,'One-time':t.once,'Fixed Deposit':t.fd,'DPS':t.dps,
-  'installments':'কিস্তি',' installments':' কিস্তি','CASH':'নগদ','BANK':'ব্যাংক','BKASH':'বিকাশ','NAGAD':'নগদ (Nagad)',
+  'installments':currentLang==='bn'?'কিস্তি':'installments',' installments':currentLang==='bn'?' কিস্তি':' installments','CASH':'নগদ','BANK':'ব্যাংক','BKASH':'বিকাশ','NAGAD':'নগদ (Nagad)',
   'p.a.':currentLang==='bn'?'বার্ষিক':'per year','Txn:':currentLang==='bn'?'লেনদেন:':'Txn:'
  };
  if(currentLang==='bn'){
