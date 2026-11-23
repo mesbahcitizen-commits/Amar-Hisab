@@ -359,6 +359,30 @@ const persistFinance=()=>{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accou
 const fmtBDT=n=>'৳ '+Number(n||0).toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
 function accountBalance(a){return movements.reduce((b,m)=>{const amount=Number(m.amount||0),fee=Number(m.charge||0);if(m.kind==='transfer'){if(m.from===a.id)b-=amount+fee;if(m.to===a.id)b+=amount}else if(m.account===a.id){b+=(m.kind==='deposit'?amount-fee:-(amount+fee))}return b},Number(a.opening||0))}
 function refreshAccountSelects(){['movementFrom','movementTo','loanAccount','repaymentAccount','emiPaymentAccount','dpsAccount'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=accounts.map(a=>'<option value="'+a.id+'">'+escapeFinance(a.name)+' ('+a.type+')</option>').join('');if(accounts.some(a=>a.id===old))el.value=old});['repaymentLoan','emiLoan'].forEach(id=>{const el=$(id);if(!el)return;const old=el.value;el.innerHTML=loans.map(l=>'<option value="'+l.id+'">'+escapeFinance(l.lender)+' — '+escapeFinance(l.purpose)+'</option>').join('');if(loans.some(l=>l.id===old))el.value=old});const p=$('emiPaymentPlan');if(p){const old=p.value;p.innerHTML=emiPlans.map(x=>'<option value="'+x.id+'">'+x.count+' installments · '+fmtBDT(x.amount)+'</option>').join('');if(emiPlans.some(x=>x.id===old))p.value=old}}
+function localizeFinanceGenerated(){
+ if(currentLang!=='bn')return;
+ const t=financeTranslations.bn;
+ const map={
+  'Available Funds':t.available,'Loan Outstanding':t.outstanding,'DPS / Fixed Deposit':t.dpsTitle,
+  'Account Transfer':t.transfer,'Send Money':t.send,'Cash Out':t.cashout,'Deposit':t.deposit,'Withdrawal':t.withdraw,
+  'No accounts added yet.':t.noAccounts,'No account movements yet.':t.noMoves,'No loans recorded yet.':t.noLoans,
+  'No DPS / Fixed Deposits recorded yet.':t.noDps,'No EMI schedules created yet.':t.noEmi,
+  'Edit':t.edit,'Delete':t.delete,'Due ':t.due+' ','Paid':t.paid,'Scheduled':t.scheduled,
+  'DUE / OVERDUE':t.overdue,'Reminder: One or more EMI installments are due or overdue.':t.reminder,
+  'No EMI payments due today.':t.noReminder,'Loan repayment':t.repayment,'EMI installment':t.installment,
+  'Principal ':'মূল টাকা ','Interest rate ':'সুদের হার ','Interest paid ':'পরিশোধিত সুদ ',
+  'Term ':'মেয়াদ ','months':'মাস','Next due ':'পরবর্তী কিস্তির তারিখ ',
+  'Charge ':'চার্জ ','Maturity ':'মেয়াদপূর্তি ','Rate ':'হার ',
+  'Monthly':t.monthly,'Yearly':t.yearly,'One-time':t.once,'Fixed Deposit':t.fd,'DPS':t.dps,
+  'installments':'কিস্তি',' installments':' কিস্তি','CASH':'নগদ','BANK':'ব্যাংক','BKASH':'বিকাশ','NAGAD':'নগদ (Nagad)',
+  'p.a.':'বার্ষিক','Txn:':'লেনদেন:'
+ };
+ ['financeSummary','accountList','movementList','loanList','dpsList','emiPlanList','emiPaymentList','repaymentList'].forEach(id=>{
+  const el=$(id);if(!el)return;let html=el.innerHTML;
+  Object.entries(map).forEach(([a,b])=>{html=html.split(a).join(b)});
+  el.innerHTML=html;
+ });
+}
 function renderFinance(){
  refreshAccountSelects();
  const byType=t=>accounts.filter(a=>a.type===t).reduce((n,a)=>n+accountBalance(a),0);
@@ -375,7 +399,7 @@ function renderFinance(){
  $('emiPlanList').innerHTML=emiPlans.map(p=>{const paid=emiPayments.filter(x=>x.planId===p.id).length;const l=loans.find(x=>x.id===p.loanId),due=new Date(p.firstDate+'T00:00:00');due.setMonth(due.getMonth()+paid);const overdue=paid<p.count&&due<=new Date(today+'T00:00:00');return '<div class="item"><div><b>'+escapeFinance(l?.lender||'Loan')+' EMI</b><small>'+fmtBDT(p.amount)+' × '+p.count+' · Next due '+formatDate(localISODate(due))+' · '+(overdue?'DUE / OVERDUE':'Scheduled')+'</small><div class="finance-actions"><button data-fin-edit="emiPlan" data-id="'+p.id+'">Edit</button><button class="delete-finance" data-fin-delete="emiPlan" data-id="'+p.id+'">Delete</button></div></div><div class="amt">'+paid+'/'+p.count+' paid</div></div>'}).join('')||'<p class="empty">No EMI schedules created yet.</p>';
  $('emiReminderStatus').textContent=emiPlans.some(p=>{const paid=emiPayments.filter(x=>x.planId===p.id).length,due=new Date(p.firstDate+'T00:00:00');due.setMonth(due.getMonth()+paid);return paid<p.count&&due<=new Date(today+'T00:00:00')})?'Reminder: One or more EMI installments are due or overdue.':'No EMI payments due today.';
  $('emiPaymentList').innerHTML=emiPayments.slice().reverse().slice(0,100).map(p=>'<div class="item"><div><b>EMI installment '+p.installment+'</b><small>'+formatDate(p.date)+' · '+fmtBDT(p.amount)+'</small><div class="finance-actions"><button data-fin-edit="emiPayment" data-id="'+p.id+'">Edit</button><button class="delete-finance" data-fin-delete="emiPayment" data-id="'+p.id+'">Delete</button></div></div><div class="amt">Paid</div></div>').join('');
- $('repaymentList').innerHTML=repayments.slice().reverse().slice(0,100).map(r=>'<div class="item"><div><b>Loan repayment</b><small>'+formatDate(r.date)+' · Principal '+fmtBDT(r.principal)+' · Interest '+fmtBDT(r.interest)+'</small><div class="finance-actions"><button data-fin-edit="repayment" data-id="'+r.id+'">Edit</button><button class="delete-finance" data-fin-delete="repayment" data-id="'+r.id+'">Delete</button></div></div><div class="amt">'+fmtBDT(r.principal+r.interest)+'</div></div>').join('');
+ $('repaymentList').innerHTML=repayments.slice().reverse().slice(0,100).map(r=>'<div class="item"><div><b>Loan repayment</b><small>'+formatDate(r.date)+' · Principal '+fmtBDT(r.principal)+' · Interest '+fmtBDT(r.interest)+'</small><div class="finance-actions"><button data-fin-edit="repayment" data-id="'+r.id+'">Edit</button><button class="delete-finance" data-fin-delete="repayment" data-id="'+r.id+'">Delete</button></div></div><div class="amt">'+fmtBDT(r.principal+r.interest)+'</div></div>').join(''); localizeFinanceGenerated();
 }
 function escapeFinance(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 $('movementType').addEventListener('change',()=>{$('movementToWrap').classList.toggle('hidden',$('movementType').value!=='transfer')});
