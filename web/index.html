@@ -62,7 +62,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <button class="active" data-tab="entry" data-i18n="newEntry">নতুন এন্ট্রি</button>
 <button data-tab="history" data-i18n="history">লেনদেনের তালিকা</button>
 <button data-tab="report" data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</button>
-<button data-tab="finance" data-i18n="financeTab">ব্যাংক, বিকাশ, নগদ ও লোন</button>
+<button id="financeTabLabel" data-tab="finance">অন্যান্য হিসাব</button>
 </nav>
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
@@ -103,10 +103,10 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 
 
 <section id="finance" class="panel hidden">
- <h2>Amar Hisab – Bank & Mobile Financial Account Management</h2>
+ <h2>অন্যান্য হিসাব</h2>
  <p class="muted">বাংলাদেশি টাকা (৳ BDT) অনুযায়ী ব্যাংক, bKash, Nagad, ঋণ ও DPS/Fixed Deposit-এর হিসাব। এটি ম্যানুয়াল হিসাব ব্যবস্থা; কোনো ব্যাংক বা MFS-এর সঙ্গে সরাসরি সংযুক্ত নয়।</p>
  <div id="financeSummary" class="finance-summary"></div>
- <h3>Accounts</h3>
+ <h3 data-finance-key="accounts">Accounts</h3>
  <form id="accountForm">
   <div><label>Account type</label><select id="accountType"><option value="cash">Cash</option><option value="bank">Bank</option><option value="bkash">bKash</option><option value="nagad">Nagad</option></select></div>
   <div><label>Account name</label><input id="accountName" required placeholder="e.g. Salary Account"></div>
@@ -117,7 +117,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  </form>
  <div id="accountList"></div>
  <hr>
- <h3>Deposit, Withdrawal & Transfer</h3>
+ <h3 data-finance-key="transactions">Deposit, Withdrawal & Transfer</h3>
  <form id="movementForm">
   <div><label>Action</label><select id="movementType"><option value="deposit">Deposit / Cash In</option><option value="withdrawal">Withdrawal</option><option value="transfer">Account Transfer</option><option value="send_money">Send Money</option><option value="cash_out">Cash Out</option></select></div>
   <div><label>Amount (BDT)</label><input id="movementAmount" type="number" min="0.01" step="0.01" required></div>
@@ -131,7 +131,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  </form>
  <div id="movementList"></div>
  <hr>
- <h3>Loans</h3>
+ <h3 data-finance-key="loans">Loans</h3>
  <form id="loanForm">
   <div><label>Loan provider / person</label><input id="loanLender" required></div>
   <div><label>Loan purpose</label><input id="loanPurpose" required placeholder="e.g. Home, education, emergency"></div>
@@ -154,7 +154,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  </form>
  <div id="repaymentList"></div>
  <hr>
- <h3 class="finance-section-title">DPS / Fixed Deposit Management</h3>
+ <h3 class="finance-section-title" data-finance-key="dpsTitle">DPS / Fixed Deposit Management</h3>
  <form id="dpsForm">
   <div><label>Bank / Financial Institution</label><input id="dpsInstitution" required></div>
   <div><label>Deposit Type</label><select id="dpsType"><option value="DPS">DPS</option><option value="Fixed Deposit">Fixed Deposit</option></select></div>
@@ -170,7 +170,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  </form>
  <div id="dpsList"></div>
  <hr>
- <h3>EMI Schedule</h3>
+ <h3 data-finance-key="emi">EMI Schedule</h3>
  <form id="emiPlanForm" class="hidden">
   <div><label>Loan</label><select id="emiLoan" required></select></div>
   <div><label>Installment amount (BDT)</label><input id="emiAmount" type="number" min="0.01" step="0.01" required></div>
@@ -219,8 +219,48 @@ const translations={
  en:{appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date (DD-MM-YYYY)',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',subcategory:'Subcategory',incomeSection:'Income',expenseSection:'Expenses',profilePicture:'Profile picture',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
 };
 let currentLang=localStorage.getItem(LANG_KEY)||'bn';
+const financeTranslations={
+ bn:{
+  tab:'অন্যান্য হিসাব',title:'অন্যান্য হিসাব',intro:'বাংলাদেশি টাকা (৳ BDT) অনুযায়ী ব্যাংক, বিকাশ, নগদ, ঋণ ও DPS/মেয়াদি আমানতের হিসাব। এটি ম্যানুয়াল হিসাব ব্যবস্থা; কোনো ব্যাংক বা মোবাইল আর্থিক সেবার সঙ্গে সরাসরি সংযুক্ত নয়।',
+  accounts:'অ্যাকাউন্টসমূহ',accountType:'অ্যাকাউন্টের ধরন',cash:'নগদ',bank:'ব্যাংক',bkash:'বিকাশ',nagad:'নগদ (Nagad)',accountName:'অ্যাকাউন্টের নাম',accountNamePh:'যেমন: বেতন অ্যাকাউন্ট',branch:'শাখার নাম (ঐচ্ছিক)',branchPh:'শাখার নাম',accountNo:'অ্যাকাউন্ট নম্বর / পরিচিতি',accountNoPh:'অ্যাকাউন্ট নম্বর / সংক্ষিপ্ত নাম',opening:'প্রারম্ভিক জমা (টাকা)',addAccount:'অ্যাকাউন্ট যোগ করুন',
+  transactions:'জমা, উত্তোলন ও স্থানান্তর',action:'লেনদেনের ধরন',deposit:'জমা / ক্যাশ ইন',withdraw:'উত্তোলন',transfer:'অ্যাকাউন্টে স্থানান্তর',send:'সেন্ড মানি',cashout:'ক্যাশ আউট',amount:'পরিমাণ (টাকা)',charge:'চার্জ / ফি (টাকা)',from:'যে অ্যাকাউন্ট থেকে',to:'যে অ্যাকাউন্টে',txn:'লেনদেন নম্বর (ঐচ্ছিক)',txnPh:'Txn ID / রেফারেন্স',date:'তারিখ',notePh:'মন্তব্য / রেফারেন্স (ঐচ্ছিক)',saveTxn:'লেনদেন সংরক্ষণ করুন',
+  loans:'ঋণের হিসাব',provider:'ঋণদাতা / প্রতিষ্ঠানের নাম',purpose:'ঋণের উদ্দেশ্য',purposePh:'যেমন: বাড়ি, শিক্ষা, জরুরি প্রয়োজন',principal:'ঋণের মূল টাকা (টাকা)',received:'ঋণ গ্রহণের তারিখ',rate:'বার্ষিক সুদের হার (%) (ঐচ্ছিক)',note:'মন্তব্য (ঐচ্ছিক)',credited:'যে অ্যাকাউন্টে ঋণের টাকা জমা হয়েছে',recordLoan:'ঋণ গ্রহণের তথ্য সংরক্ষণ',repay:'ঋণ পরিশোধের তথ্য',loan:'ঋণ',principalPaid:'মূল টাকা পরিশোধ (টাকা)',interestPaid:'সুদ / চার্জ পরিশোধ (টাকা)',payDate:'পরিশোধের তারিখ',paidFrom:'যে অ্যাকাউন্ট থেকে পরিশোধ',saveRepay:'পরিশোধ সংরক্ষণ করুন',
+  dpsTitle:'DPS / মেয়াদি আমানত ব্যবস্থাপনা',institution:'ব্যাংক / আর্থিক প্রতিষ্ঠানের নাম',depositType:'আমানতের ধরন',dps:'DPS',fd:'মেয়াদি আমানত (FDR)',frequency:'কিস্তির সময়কাল',monthly:'মাসিক',yearly:'বার্ষিক',once:'এককালীন',depositAmount:'আমানতের পরিমাণ (টাকা)',term:'মেয়াদ (মাস)',profitRate:'বার্ষিক মুনাফা / সুদের হার (%)',start:'শুরুর তারিখ',maturity:'মেয়াদপূর্তির তারিখ (ঐচ্ছিক)',payFrom:'যে অ্যাকাউন্ট থেকে জমা হবে',remarks:'মন্তব্য / বিবরণ',saveDps:'DPS / মেয়াদি আমানত সংরক্ষণ',
+  emi:'EMI / কিস্তির সময়সূচি',emiAmount:'প্রতি কিস্তির পরিমাণ (টাকা)',emiCount:'কিস্তির সংখ্যা',firstDue:'প্রথম কিস্তির তারিখ',createEmi:'কিস্তির সময়সূচি তৈরি করুন',emiPayment:'EMI কিস্তি পরিশোধের তথ্য',emiPlan:'EMI পরিকল্পনা',paymentAccount:'পরিশোধের অ্যাকাউন্ট',paymentDate:'পরিশোধের তারিখ',payNext:'পরবর্তী কিস্তি পরিশোধ করুন',
+  available:'মোট ব্যবহারযোগ্য টাকা',outstanding:'ঋণের বকেয়া',noAccounts:'এখনো কোনো অ্যাকাউন্ট যোগ করা হয়নি।',noMoves:'এখনো কোনো লেনদেন নেই।',noLoans:'এখনো কোনো ঋণের তথ্য নেই।',noDps:'এখনো কোনো DPS / মেয়াদি আমানত নেই।',noEmi:'এখনো কোনো কিস্তির সময়সূচি তৈরি করা হয়নি।',edit:'সম্পাদনা',delete:'মুছুন',due:'পরিশোধযোগ্য',paid:'পরিশোধিত',scheduled:'নির্ধারিত',overdue:'বকেয়া / মেয়াদোত্তীর্ণ',reminder:'সতর্কতা: এক বা একাধিক EMI কিস্তির তারিখ পার হয়েছে বা পরিশোধের সময় হয়েছে।',noReminder:'আজ কোনো EMI কিস্তি পরিশোধের তারিখ নেই।',repayment:'ঋণ পরিশোধ',installment:'কিস্তি',months:'মাস',txnSaved:'অ্যাকাউন্টের লেনদেন',chargeLabel:'চার্জ',maturityLabel:'মেয়াদপূর্তি',rateLabel:'হার'
+ },
+ en:{
+  tab:'Other Accounts',title:'Other Accounts',intro:'Bank, bKash, Nagad, loan and DPS/fixed-deposit records in Bangladeshi Taka (৳ BDT). This is a manual record-keeping system and is not directly connected to any bank or MFS provider.',
+  accounts:'Accounts',accountType:'Account type',cash:'Cash',bank:'Bank',bkash:'bKash',nagad:'Nagad',accountName:'Account name',accountNamePh:'e.g. Salary Account',branch:'Branch Name (optional)',branchPh:'Branch',accountNo:'Account No. / Identifier',accountNoPh:'Account number / nickname',opening:'Opening balance (BDT)',addAccount:'Add Account',
+  transactions:'Deposit, Withdrawal & Transfer',action:'Action',deposit:'Deposit / Cash In',withdraw:'Withdrawal',transfer:'Account Transfer',send:'Send Money',cashout:'Cash Out',amount:'Amount (BDT)',charge:'Charge / Fee (BDT)',from:'From / Account',to:'To Account',txn:'Transaction ID (optional)',txnPh:'Txn ID / reference',date:'Date',notePh:'Note / reference (optional)',saveTxn:'Save Account Transaction',
+  loans:'Loans',provider:'Loan provider / person',purpose:'Loan purpose',purposePh:'e.g. Home, education, emergency',principal:'Principal (BDT)',received:'Date received',rate:'Interest rate (% per year, optional)',note:'Note (optional)',credited:'Loan credited to account',recordLoan:'Record Loan Received',repay:'Record Loan Repayment',loan:'Loan',principalPaid:'Principal repaid (BDT)',interestPaid:'Interest / charge paid (BDT)',payDate:'Payment date',paidFrom:'Paid from account',saveRepay:'Save Repayment',
+  dpsTitle:'DPS / Fixed Deposit Management',institution:'Bank / Financial Institution',depositType:'Deposit Type',dps:'DPS',fd:'Fixed Deposit',frequency:'Installment Frequency',monthly:'Monthly',yearly:'Yearly',once:'One-time',depositAmount:'Deposit Amount (BDT)',term:'Term (months)',profitRate:'Profit / Interest rate (% yearly, optional)',start:'Start Date',maturity:'Maturity Date (optional)',payFrom:'Pay from Account',remarks:'Remarks / Note',saveDps:'Save DPS / Fixed Deposit',
+  emi:'EMI Schedule',emiAmount:'Installment amount (BDT)',emiCount:'Number of installments',firstDue:'First due date',createEmi:'Create EMI Schedule',emiPayment:'Record EMI Payment',emiPlan:'EMI plan',paymentAccount:'Payment account',paymentDate:'Payment date',payNext:'Pay Next EMI Installment',
+  available:'Available Funds',outstanding:'Loan Outstanding',noAccounts:'No accounts added yet.',noMoves:'No account movements yet.',noLoans:'No loans recorded yet.',noDps:'No DPS / Fixed Deposits recorded yet.',noEmi:'No EMI schedules created yet.',edit:'Edit',delete:'Delete',due:'Due',paid:'Paid',scheduled:'Scheduled',overdue:'DUE / OVERDUE',reminder:'Reminder: One or more EMI installments are due or overdue.',noReminder:'No EMI payments due today.',repayment:'Loan repayment',installment:'EMI installment',months:'months',txnSaved:'Account transaction',chargeLabel:'Charge',maturityLabel:'Maturity',rateLabel:'Rate'
+ }
+};
+const ft=k=>(financeTranslations[currentLang]||financeTranslations.bn)[k]||financeTranslations.en[k]||k;
+function applyFinanceLanguage(){
+ const t=financeTranslations[currentLang]||financeTranslations.bn;
+ $('financeTabLabel')?.replaceChildren(document.createTextNode(t.tab));
+ $('finance').querySelector('h2').textContent=t.title;
+ $('finance').querySelector(':scope > p.muted').textContent=t.intro;
+ const labels={accountType:'accountType',accountName:'accountName',accountBranch:'branch',accountNumber:'accountNo',accountOpening:'opening',movementType:'action',movementAmount:'amount',movementCharge:'charge',movementFrom:'from',movementTo:'to',movementReference:'txn',movementDate:'date',loanLender:'provider',loanPurpose:'purpose',loanPrincipal:'principal',loanDate:'received',loanRate:'rate',loanNote:'note',loanAccount:'credited',repaymentLoan:'loan',repaymentPrincipal:'principalPaid',repaymentInterest:'interestPaid',repaymentDate:'payDate',repaymentAccount:'paidFrom',dpsInstitution:'institution',dpsType:'depositType',dpsFrequency:'frequency',dpsAmount:'depositAmount',dpsTerm:'term',dpsRate:'profitRate',dpsStartDate:'start',dpsMaturityDate:'maturity',dpsAccount:'payFrom',dpsNote:'remarks',emiLoan:'loan',emiAmount:'emiAmount',emiCount:'emiCount',emiFirstDate:'firstDue',emiPaymentPlan:'emiPlan',emiPaymentAccount:'paymentAccount',emiPaymentDate:'paymentDate'};
+ Object.entries(labels).forEach(([id,key])=>{const el=$(id);const label=el?.parentElement?.querySelector('label');if(label)label.textContent=t[key]});
+ const placeholders={accountName:'accountNamePh',accountBranch:'branchPh',accountNumber:'accountNoPh',movementReference:'txnPh',movementNote:'notePh',loanPurpose:'purposePh'};
+ Object.entries(placeholders).forEach(([id,key])=>{if($(id))$(id).placeholder=t[key]});
+ const headingMap={'accountForm':'accounts','movementForm':'transactions','loanForm':'loans','dpsForm':'dpsTitle','emiPlanForm':'emi','repaymentForm':'repay','emiPaymentForm':'emiPayment'};
+ Object.entries(headingMap).forEach(([id,key])=>{const h=$(id)?.querySelector('h3');if(h)h.textContent=t[key]});
+ const buttons={accountForm:'addAccount',movementForm:'saveTxn',loanForm:'recordLoan',repaymentForm:'saveRepay',dpsForm:'saveDps',emiPlanForm:'createEmi',emiPaymentForm:'payNext'};
+ Object.entries(buttons).forEach(([id,key])=>{const b=$(id)?.querySelector('button[type=submit]');if(b)b.textContent=t[key]});
+ const opts={accountType:['cash','bank','bkash','nagad'],movementType:['deposit','withdraw','transfer','send','cashout'],dpsType:['dps','fd'],dpsFrequency:['monthly','yearly','once']};
+ Object.entries(opts).forEach(([id,keys])=>{const el=$(id);if(el)keys.forEach((k,i)=>{if(el.options[i])el.options[i].text=t[k]})});
+ $('finance').querySelectorAll('h3').forEach(h=>{const raw=h.dataset.financeKey;if(raw)h.textContent=t[raw]});
+ renderFinance();
+}
+
 function tr(key){return translations[currentLang][key]||translations.bn[key]||key}
-function applyLanguage(){document.documentElement.lang=currentLang;$('languageSelect').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;el.textContent=tr(k)});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));$('type').options[0].text=tr('expense');$('type').options[1].text=tr('income');$('editType').options[0].text=tr('expense');$('editType').options[1].text=tr('income');updateCats();fillSubcategories($('category').value,'subcategory','subcategoryWrap',$('subcategory').value);if(editingId!==null){const x=entries.find(e=>e.id===editingId);if(x){fillEditCats(x.category);fillSubcategories(x.category,'editSubcategory','editSubcategoryWrap',x.subcategory)}}render()}
+function applyLanguage(){document.documentElement.lang=currentLang;$('languageSelect').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;el.textContent=tr(k)});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));$('type').options[0].text=tr('expense');$('type').options[1].text=tr('income');$('editType').options[0].text=tr('expense');$('editType').options[1].text=tr('income');updateCats();fillSubcategories($('category').value,'subcategory','subcategoryWrap',$('subcategory').value);if(editingId!==null){const x=entries.find(e=>e.id===editingId);if(x){fillEditCats(x.category);fillSubcategories(x.category,'editSubcategory','editSubcategoryWrap',x.subcategory)}}render();if(typeof renderFinance==='function')applyFinanceLanguage()}
 $('languageSelect').addEventListener('change',e=>{currentLang=e.target.value;localStorage.setItem(LANG_KEY,currentLang);applyLanguage()});
 const PROFILE_KEY='amarHisab_profile_picture_v1';
 function showProfilePicture(data){const img=$('profileImage'),avatar=$('profileAvatar');if(data){img.src=data;avatar.classList.add('has-photo')}else{img.removeAttribute('src');avatar.classList.remove('has-photo')}}
