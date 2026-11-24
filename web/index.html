@@ -64,6 +64,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .custom-subcategory-modal .custom-modal-message{font-size:16px;line-height:1.6;margin:8px 0 18px;color:#172b2a}
 
 
+.settings-language-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#ffffff24;color:#fff;font-size:21px;flex:0 0 34px}
 .main-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible}
 .main-nav button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border-radius:17px;background:#e8f4ef;color:#145b4f;font-size:12px;line-height:1.25;white-space:normal;box-shadow:0 2px 7px #143b3510}
 .main-nav button.active{background:linear-gradient(145deg,#0c9b58,#087447);color:#fff;box-shadow:0 4px 12px #08744735}
@@ -98,7 +99,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 #financeConfirmNo{background:#edf1f3;color:#263238}
 </style></head>
 <body>
-<header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
+<header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><span class="settings-language-icon" aria-hidden="true">⚙</span><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
 <main>
 <section class="cards">
  <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
@@ -452,7 +453,7 @@ const list=filtered(),incomeList=list.filter(x=>x.type==='income'),expenseList=l
 const m=$('reportMonth').value;const arr=entries.filter(x=>x.date.startsWith(m));const mi=arr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),me=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0),metric=selectedReportMetric||'income';const metricData={income:{label:tr('reportIncome'),value:mi},expense:{label:tr('reportExpense'),value:me},balance:{label:tr('remaining'),value:mi-me}}[metric];$('monthSummary').textContent=metricData.label+' : '+money(metricData.value);document.querySelectorAll('.metric-tab').forEach(b=>b.classList.toggle('active',b.dataset.metric===metric));
 }
 let editingId=null,deletingId=null;
-function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected;fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap')}
+function fillEditCats(selected){const t=$('editType').value;$('editCategory').innerHTML=cats[t].map(c=>`<option value="${c.replaceAll('&','&amp;').replaceAll('"','&quot;')}">${categoryLabel(c)}</option>`).join('');if(selected&&!cats[t].includes(selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected;$('editCategory').appendChild(o)}if(selected)$('editCategory').value=selected;fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap');renderCategoryIconGrid('editCategory','editCategoryIconGrid')}
 window.editEntry=id=>{const x=entries.find(e=>e.id===id);if(!x)return;editingId=id;$('editType').value=x.type;$('editDate').value=x.date;$('editAmount').value=x.amount;$('editNote').value=x.note||'';fillEditCats(x.category);fillSubcategories(x.category,'editSubcategory','editSubcategoryWrap',x.subcategory);$('editModal').classList.remove('hidden')};
 window.deleteEntry=id=>{if(!entries.some(e=>e.id===id))return;deletingId=id;$('deleteModal').classList.remove('hidden')};
 $('editType').addEventListener('change',()=>fillEditCats());$('editCategory').addEventListener('change',()=>fillSubcategories($('editCategory').value,'editSubcategory','editSubcategoryWrap'));
