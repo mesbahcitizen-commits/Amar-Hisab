@@ -46,6 +46,23 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .modal-actions button{flex:1}.danger{background:#b42318!important;color:#fff!important}
 .finance-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:12px 0 18px}.finance-tile{padding:13px;border-radius:13px;color:white;box-shadow:0 2px 8px #00000012}.finance-tile small{display:block;opacity:.9}.finance-tile strong{display:block;margin-top:5px;font-size:18px}.finance-tile.cash{background:#16834a}.finance-tile.bank{background:#2563eb}.finance-tile.bkash{background:#a21caf}.finance-tile.nagad{background:#ea580c}.finance-tile.loan{background:#b42318}.finance-tile.deposit{background:#0f766e}.finance-tile.available{background:#7c3aed}.finance-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}.finance-actions button{font-size:12px;padding:5px 8px;border:0;border-radius:7px;background:#eaf2f1;color:#24524e}.finance-actions .delete-finance{background:#fff0ef;color:#b42318}.transfer-chip{display:inline-block;padding:4px 8px;border-radius:8px;color:white;font-size:12px;font-weight:700}.transfer-cash{background:#16834a}.transfer-bank{background:#64748b}.transfer-bkash{background:#a21caf}.transfer-nagad{background:#ea580c}.transfer-other{background:#2563eb}.finance-section-title{margin:18px 0 8px;font-size:17px;color:#24524e}@media(max-width:520px){.finance-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-tile strong{font-size:15px}}
 
+
+.custom-subcategory-modal{width:min(100%,460px);border-radius:24px;padding:22px;background:#fff}
+.custom-subcategory-modal .custom-modal-heading{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.custom-subcategory-modal .custom-modal-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#e7f7ed;color:#078348;font-size:25px;font-weight:800;flex:0 0 42px}
+.custom-subcategory-modal h2{margin:0;font-size:19px;color:#10243b}
+.custom-subcategory-modal .custom-modal-close{margin-left:auto;border:0;background:transparent;color:#526579;font-size:25px;padding:0 4px;cursor:pointer}
+.custom-subcategory-modal label{font-size:15px;color:#172b2a;margin:0 0 8px}
+.custom-subcategory-modal input{border:1.5px solid #2585ff;border-radius:13px;padding:14px 15px;font-size:17px;outline:none}
+.custom-subcategory-modal input:focus{box-shadow:0 0 0 3px #2585ff20}
+.custom-subcategory-modal .modal-actions{margin-top:20px}
+.custom-subcategory-modal .modal-actions button{border:0;border-radius:14px;padding:13px 12px;font:inherit;font-weight:700;cursor:pointer}
+.custom-subcategory-modal .custom-modal-save{background:#078348;color:#fff}
+.custom-subcategory-modal .custom-modal-edit{background:#1675ed;color:#fff}
+.custom-subcategory-modal .custom-modal-cancel{background:#e9edf2;color:#1f2937}
+.custom-subcategory-modal .custom-modal-delete{background:#ef3027;color:#fff}
+.custom-subcategory-modal .custom-modal-message{font-size:16px;line-height:1.6;margin:8px 0 18px;color:#172b2a}
+
 @media(max-width:420px){.cards{gap:6px}.card{padding:11px 8px}.card strong{font-size:15px}form{grid-template-columns:1fr}.wide,textarea{grid-column:auto}}
 </style>
 <!-- Desktop build retains Financial tab; iOS package hides it during packaging. -->
@@ -220,6 +237,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  <div class="modal-actions"><button class="danger" id="confirmDelete" data-i18n="yesDelete">হ্যাঁ, মুছুন</button><button class="secondary" id="cancelDelete" data-i18n="cancel">বাতিল</button></div></div>
 </div>
 
+
+<div id="customSubcategoryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="customSubcategoryModalTitle">
+ <div class="modal-card custom-subcategory-modal">
+  <div class="custom-modal-heading"><span class="custom-modal-icon" id="customSubcategoryModalIcon">＋</span><h2 id="customSubcategoryModalTitle">নতুন উপ-ক্যাটাগরি যোগ করুন</h2><button type="button" class="custom-modal-close" id="customSubcategoryModalClose" aria-label="Close">×</button></div>
+  <div id="customSubcategoryInputArea"><label id="customSubcategoryModalLabel" for="customSubcategoryModalInput">ক্যাটাগরির নাম লিখুন:</label><input id="customSubcategoryModalInput" type="text" maxlength="60" autocomplete="off"></div>
+  <p id="customSubcategoryModalMessage" class="custom-modal-message hidden"></p>
+  <div class="modal-actions"><button type="button" id="customSubcategoryModalCancel" class="custom-modal-cancel">বাতিল</button><button type="button" id="customSubcategoryModalSave" class="custom-modal-save">সংরক্ষণ</button></div>
+ </div>
+</div>
+
 <footer data-i18n="footer">আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে</footer>
 </main>
 <script>
@@ -321,10 +348,52 @@ const today=localISODate();
 $('date').value=today;$('reportMonth').value=today.slice(0,7);
 function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
 function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('');fillSubcategories($('category').value,'subcategory','subcategoryWrap')}
-function addCustomSubcategory(){const p=$('category').value;if(!p)return;const label=currentLang==='en'?'Enter a new subcategory name:':'নতুন উপ-ক্যাটাগরির নাম লিখুন:';const name=prompt(label);if(!name||!name.trim())return;const value=name.trim();if(allSubcategories(p).some(x=>x.toLowerCase()===value.toLowerCase())){alert(currentLang==='en'?'This item already exists.':'এই নামটি আগে থেকেই আছে।');return}(customSubcats[p]||(customSubcats[p]=[])).push(value);saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap',value);}
+
+function customSubcategoryDialog(mode,initial=''){
+ return new Promise(resolve=>{
+  const overlay=$('customSubcategoryModal'),title=$('customSubcategoryModalTitle'),icon=$('customSubcategoryModalIcon'),label=$('customSubcategoryModalLabel'),input=$('customSubcategoryModalInput'),inputArea=$('customSubcategoryInputArea'),message=$('customSubcategoryModalMessage'),saveBtn=$('customSubcategoryModalSave'),cancelBtn=$('customSubcategoryModalCancel'),closeBtn=$('customSubcategoryModalClose');
+  const en=currentLang==='en',isDelete=mode==='delete';
+  title.textContent=isDelete?(en?'Delete subcategory?':'মুছে ফেলবেন?'):(mode==='edit'?(en?'Edit subcategory':'উপ-ক্যাটাগরি সম্পাদনা'):(en?'Add a new subcategory':'নতুন উপ-ক্যাটাগরি যোগ করুন'));
+  icon.textContent=isDelete?'▤':(mode==='edit'?'✎':'＋');
+  icon.style.background=isDelete?'#fff0ef':(mode==='edit'?'#eaf2ff':'#e7f7ed');
+  icon.style.color=isDelete?'#e32620':(mode==='edit'?'#1675ed':'#078348');
+  inputArea.classList.toggle('hidden',isDelete);message.classList.toggle('hidden',!isDelete);
+  label.textContent=en?'Enter subcategory name:':'ক্যাটাগরির নাম লিখুন:';
+  input.value=initial;
+  message.textContent=en?'Do you want to delete “'+initial+'”?':'আপনি কি “'+initial+'” উপ-ক্যাটাগরিটি মুছে ফেলতে চান?';
+  saveBtn.textContent=isDelete?(en?'Yes, Delete':'হ্যাঁ'): (mode==='edit'?(en?'Update':'আপডেট করুন'):(en?'Save':'সংরক্ষণ'));
+  cancelBtn.textContent=en?'Cancel':'বাতিল';
+  saveBtn.className='custom-modal-'+(isDelete?'delete':(mode==='edit'?'edit':'save'));
+  overlay.classList.remove('hidden');
+  if(!isDelete){setTimeout(()=>{input.focus();input.select()},40)}
+  const finish=value=>{overlay.classList.add('hidden');saveBtn.removeEventListener('click',onSave);cancelBtn.removeEventListener('click',onCancel);closeBtn.removeEventListener('click',onCancel);overlay.removeEventListener('click',onBackdrop);input.removeEventListener('keydown',onKey);resolve(value)};
+  const onSave=()=>finish(isDelete?true:input.value.trim());
+  const onCancel=()=>finish(null);
+  const onBackdrop=e=>{if(e.target===overlay)onCancel()};
+  const onKey=e=>{if(e.key==='Enter'&&!isDelete){e.preventDefault();onSave()}if(e.key==='Escape')onCancel()};
+  saveBtn.addEventListener('click',onSave);cancelBtn.addEventListener('click',onCancel);closeBtn.addEventListener('click',onCancel);overlay.addEventListener('click',onBackdrop);input.addEventListener('keydown',onKey);
+ });
+}
+async function addCustomSubcategory(){
+ const p=$('category').value;if(!p)return;
+ const value=await customSubcategoryDialog('add');
+ if(!value)return;
+ if(allSubcategories(p).some(x=>x.toLowerCase()===value.toLowerCase())){await customSubcategoryDialog('delete',currentLang==='en'?'This name already exists.':'এই নামটি আগে থেকেই আছে।');return}
+ (customSubcats[p]||(customSubcats[p]=[])).push(value);saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap',value);
+}
 $('addCustomSubcategory').addEventListener('click',addCustomSubcategory);
-$('editCustomSubcategory').addEventListener('click',()=>{const p=$('category').value,old=$('subcategory').value;if(!(customSubcats[p]||[]).includes(old))return;const value=prompt(currentLang==='en'?'Edit subcategory name:':'উপ-ক্যাটাগরির নতুন নাম লিখুন:',old);if(!value||!value.trim())return;customSubcats[p][customSubcats[p].indexOf(old)]=value.trim();saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap',value.trim());});
-$('deleteCustomSubcategory').addEventListener('click',()=>{const p=$('category').value,value=$('subcategory').value;if(!(customSubcats[p]||[]).includes(value))return;if(!confirm(currentLang==='en'?'Delete this custom subcategory?':'এই নিজস্ব উপ-ক্যাটাগরিটি মুছে ফেলবেন?'))return;customSubcats[p]=customSubcats[p].filter(x=>x!==value);saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap');});
+$('editCustomSubcategory').addEventListener('click',async()=>{
+ const p=$('category').value,old=$('subcategory').value;if(!(customSubcats[p]||[]).includes(old))return;
+ const value=await customSubcategoryDialog('edit',old);if(!value||value===old)return;
+ if(allSubcategories(p).some(x=>x!==old&&x.toLowerCase()===value.toLowerCase()))return;
+ customSubcats[p][customSubcats[p].indexOf(old)]=value;saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap',value);
+});
+$('deleteCustomSubcategory').addEventListener('click',async()=>{
+ const p=$('category').value,value=$('subcategory').value;if(!(customSubcats[p]||[]).includes(value))return;
+ if(!await customSubcategoryDialog('delete',value))return;
+ customSubcats[p]=customSubcats[p].filter(x=>x!==value);saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap');
+});
+
 $('type').addEventListener('change',updateCats);$('category').addEventListener('change',()=>fillSubcategories($('category').value,'subcategory','subcategoryWrap'));$('subcategory').addEventListener('change',refreshCustomSubcategoryActions);updateCats();
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report','finance'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
 $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').value);if(!(amount>0))return;
