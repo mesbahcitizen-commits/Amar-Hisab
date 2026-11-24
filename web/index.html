@@ -40,7 +40,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 @media(min-width:800px){main{padding:24px}.cards{gap:14px}.card{padding:18px}.card strong{font-size:21px}nav{flex-wrap:wrap;overflow:visible}nav button{padding:12px 18px}.panel{padding:22px}#entryForm,#editForm{grid-template-columns:repeat(2,minmax(0,1fr))}.panel h2{font-size:22px}}
 @media(max-width:420px){.profile-avatar{width:46px;height:46px;flex-basis:46px}.brand-area{gap:8px}.brand-copy h1{font-size:22px}.brand-copy p{font-size:11px}}
 
-.modal-backdrop{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:18px;z-index:99}
+.modal-backdrop{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:18px;z-index:2000}
 .modal-card{width:min(100%,520px);max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:18px;box-shadow:0 12px 40px #0003}
 .modal-card h2{margin-bottom:14px}.modal-actions{display:flex;gap:9px;margin-top:14px}
 .modal-actions button{flex:1}.danger{background:#b42318!important;color:#fff!important}
@@ -367,7 +367,7 @@ const cats={expense:['খাবার','বাজার','যাতায়াত'
 const catsEn={expense:['Food','Groceries','Transport','House Rent','Medical','Electricity / Gas / Water','Education','Entertainment','Shopping','Others'],income:['Salary','Business','Freelance / Extra Income','Gift','Others']};
 const subcats={'বাজার':['মাছ','ডিম','চাল','মুরগির মাংস','গরুর গোস্ত','কাঁচা তরকারি','অন্যান্য'],'চিকিৎসা':['ডাক্তার ফী','টেস্ট খরচ','ঔষধ খরচ','অন্যান্য']};
 const CUSTOM_SUBCATS_KEY='amarHisab_custom_subcategories_v1';
-let customSubcats=JSON.parse(localStorage.getItem(CUSTOM_SUBCATS_KEY)||'{}');
+let customSubcats={};try{const storedCustomSubcats=JSON.parse(localStorage.getItem(CUSTOM_SUBCATS_KEY)||'{}');if(storedCustomSubcats&&typeof storedCustomSubcats==='object'&&!Array.isArray(storedCustomSubcats))customSubcats=storedCustomSubcats}catch(error){console.warn('Custom subcategory data could not be read; starting with an empty list.',error)}
 function saveCustomSubcats(){localStorage.setItem(CUSTOM_SUBCATS_KEY,JSON.stringify(customSubcats));}
 function allSubcategories(parent){return [...(subcats[parent]||[]),...(customSubcats[parent]||[])];}
 function refreshCustomSubcategoryActions(){const parent=$('category')?.value||'',chosen=$('subcategory')?.value||'',isCustom=(customSubcats[parent]||[]).includes(chosen);$('customSubcategoryActions').style.display=allSubcategories(parent).length||parent?'flex':'none';$('editCustomSubcategory').disabled=!isCustom;$('deleteCustomSubcategory').disabled=!isCustom;$('addCustomSubcategory').textContent=currentLang==='en'?'＋ Add More':'＋ আরো যোগ করুন';$('editCustomSubcategory').textContent=currentLang==='en'?'Edit':'সম্পাদনা';$('deleteCustomSubcategory').textContent=currentLang==='en'?'Delete':'মুছুন';}
