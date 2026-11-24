@@ -63,6 +63,27 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .custom-subcategory-modal .custom-modal-delete{background:#ef3027;color:#fff}
 .custom-subcategory-modal .custom-modal-message{font-size:16px;line-height:1.6;margin:8px 0 18px;color:#172b2a}
 
+
+.main-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible}
+.main-nav button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border-radius:17px;background:#e8f4ef;color:#145b4f;font-size:12px;line-height:1.25;white-space:normal;box-shadow:0 2px 7px #143b3510}
+.main-nav button.active{background:linear-gradient(145deg,#0c9b58,#087447);color:#fff;box-shadow:0 4px 12px #08744735}
+.nav-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font-size:24px;font-weight:800;line-height:1;background:#ffffffb8;color:#087b4b}
+.main-nav button.active .nav-icon{background:#ffffff28;color:#fff}
+.category-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.category-icon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:9px;margin-top:7px}
+.category-icon-option{display:flex;align-items:center;gap:9px;min-height:64px;padding:9px;border:1px solid #e6eeeb;border-radius:15px;background:#fff;color:#172b2a;text-align:left;font:inherit;cursor:pointer;box-shadow:0 2px 7px #143b350c}
+.category-icon-option.selected{border:2px solid #0b9a58;background:#effaf3;box-shadow:0 3px 10px #0b9a5820}
+.category-icon-bubble{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:50%;font-size:22px;color:#fff}
+.category-icon-name{font-size:13px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.summary-card{position:relative;padding-left:48px!important}
+.summary-card:before{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:29px;height:29px;display:grid;place-items:center;border-radius:50%;font-size:18px}
+.summary-card.income:before{content:"↗";background:#e4f8eb;color:#16834a}
+.summary-card.expense:before{content:"↘";background:#fff0ef;color:#d92d20}
+.summary-card.balance:before{content:"৳";background:#eaf2ff;color:#2563eb}
+.report-actions button:before{display:inline-block;margin-right:8px;font-size:18px;vertical-align:-1px}
+#csvBtn:before{content:"▤"}#excelBtn:before{content:"▦"}#pdfBtn:before{content:"▧"}#backupBtn:before{content:"☁"}#restoreBtn:before{content:"↥"}
+@media(max-width:420px){.main-nav{gap:5px}.main-nav button{font-size:11px;min-height:62px}.category-icon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-icon-option{min-height:58px;padding:7px}}
+
 @media(max-width:420px){.cards{gap:6px}.card{padding:11px 8px}.card strong{font-size:15px}form{grid-template-columns:1fr}.wide,textarea{grid-column:auto}}
 </style>
 <!-- Desktop build retains Financial tab; iOS package hides it during packaging. -->
@@ -80,15 +101,15 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
 <main>
 <section class="cards">
- <div class="card"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
- <div class="card"><small data-i18n="totalExpense">মোট খরচ</small><strong class="expense" id="totalExpense">৳ ০</strong></div>
- <div class="card"><small data-i18n="balance">ব্যালেন্স</small><strong class="balance" id="balance">৳ ০</strong></div>
+ <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
+ <div class="card summary-card expense"><small data-i18n="totalExpense">মোট খরচ</small><strong class="expense" id="totalExpense">৳ ০</strong></div>
+ <div class="card summary-card balance"><small data-i18n="balance">ব্যালেন্স</small><strong class="balance" id="balance">৳ ০</strong></div>
 </section>
-<nav>
-<button class="active" data-tab="entry" data-i18n="newEntry">নতুন এন্ট্রি</button>
-<button data-tab="history" data-i18n="history">লেনদেনের তালিকা</button>
-<button data-tab="report" data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</button>
-<button id="financeTabLabel" data-tab="finance">অন্যান্য হিসাব</button>
+<nav class="main-nav">
+<button class="active" data-tab="entry"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
+<button data-tab="history"><span class="nav-icon" aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
+<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
+<button id="financeTabLabel" data-tab="finance"><span class="nav-icon" aria-hidden="true">◈</span><span>অন্যান্য হিসাব</span></button>
 </nav>
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
@@ -96,7 +117,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <div><label data-i18n="type">ধরন</label><select id="type"><option value="expense" data-i18n="expense">খরচ</option><option value="income" data-i18n="income">আয়</option></select></div>
 <div><label data-i18n="date">তারিখ (দিন-মাস-বছর)</label><input id="date" type="date" required></div>
 <div><label data-i18n="amount">পরিমাণ (টাকা)</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="যেমন ৫০০" data-i18n-placeholder="amountPlaceholder" required></div>
-<div><label data-i18n="category">ক্যাটাগরি</label><select id="category"></select></div>
+<div class="wide category-field"><label data-i18n="category">ক্যাটাগরি</label><select id="category" class="category-native"></select><div id="categoryIconGrid" class="category-icon-grid" role="group" aria-label="Choose category"></div></div>
 <div id="subcategoryWrap" class="subcat-wrap"><label data-i18n="subcategory">উপ-ক্যাটাগরি</label><select id="subcategory"></select></div>
 <div id="customSubcategoryActions" class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="addCustomSubcategory">＋ আরো যোগ করুন</button><button type="button" id="editCustomSubcategory">সম্পাদনা</button><button type="button" id="deleteCustomSubcategory">মুছুন</button></div>
 <textarea id="note" rows="2" placeholder="বিবরণ / নোট (ঐচ্ছিক)" data-i18n-placeholder="notePlaceholder"></textarea>
@@ -225,7 +246,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
    <div><label data-i18n="type">ধরন</label><select id="editType"><option value="expense" data-i18n="expense">খরচ</option><option value="income" data-i18n="income">আয়</option></select></div>
    <div><label data-i18n="date">তারিখ (দিন-মাস-বছর)</label><input id="editDate" type="date" required></div>
    <div><label data-i18n="amount">পরিমাণ (টাকা)</label><input id="editAmount" type="number" min="0.01" step="0.01" required></div>
-   <div><label data-i18n="category">ক্যাটাগরি</label><select id="editCategory"></select></div>
+   <div class="wide category-field"><label data-i18n="category">ক্যাটাগরি</label><select id="editCategory" class="category-native"></select><div id="editCategoryIconGrid" class="category-icon-grid" role="group" aria-label="Choose category"></div></div>
    <div id="editSubcategoryWrap" class="subcat-wrap"><label data-i18n="subcategory">উপ-ক্যাটাগরি</label><select id="editSubcategory"></select></div>
    <textarea id="editNote" rows="2" placeholder="বিবরণ / নোট (ঐচ্ছিক)" data-i18n-placeholder="notePlaceholder"></textarea>
    <div class="modal-actions wide"><button class="primary" type="submit" data-i18n="saveChanges">পরিবর্তন সংরক্ষণ</button><button class="secondary" type="button" id="cancelEdit" data-i18n="cancel">বাতিল</button></div>
@@ -347,7 +368,27 @@ function formatDate(value){const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d
 const today=localISODate();
 $('date').value=today;$('reportMonth').value=today.slice(0,7);
 function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
-function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('');fillSubcategories($('category').value,'subcategory','subcategoryWrap')}
+
+const categoryVisuals={
+ 'খাবার':['🍽️','#f43f68'],'বাজার':['🛒','#16a34a'],'যাতায়াত':['🚗','#f97316'],'বাসা ভাড়া':['🏠','#2563eb'],'গৃহপরিচারিকা / তত্ত্বাবধায়ক':['🧹','#65a30d'],'চিকিৎসা':['✚','#06a6b5'],'বিদ্যুৎ / গ্যাস / পানি':['⚡','#f59e0b'],'শিক্ষা':['🎓','#16a34a'],'বিনোদন':['🎬','#8b5cf6'],'কেনাকাটা':['🛍️','#ec4899'],'অন্যান্য':['•••','#f97316'],
+ 'বেতন':['💼','#0d9488'],'ব্যবসা':['🏢','#2563eb'],'ফ্রিল্যান্স / অতিরিক্ত আয়':['💻','#7c3aed'],'উপহার':['🎁','#db2777']
+};
+const categoryVisualsEn={'Food':'🍽️','Groceries':'🛒','Transport':'🚗','House Rent':'🏠','Housekeeper / Caretaker':'🧹','Medical':'✚','Electricity / Gas / Water':'⚡','Education':'🎓','Entertainment':'🎬','Shopping':'🛍️','Others':'•••','Salary':'💼','Business':'🏢','Freelance / Extra Income':'💻','Gift':'🎁'};
+function renderCategoryIconGrid(selectId,gridId){
+ const select=$(selectId),grid=$(gridId);if(!select||!grid)return;
+ const isEn=currentLang==='en';
+ grid.innerHTML=[...select.options].map(o=>{
+  const bn=cats.expense.concat(cats.income).find((v,i)=>v===o.value)||o.value;
+  const label=o.textContent,icon=(isEn?categoryVisualsEn[label]:null)||categoryVisuals[bn]?.[0]||'●',color=categoryVisuals[bn]?.[1]||'#64748b';
+  return '<button type="button" class="category-icon-option'+(o.selected?' selected':'')+'" data-category-value="'+o.value.replaceAll('&','&amp;').replaceAll('"','&quot;')+'"><span class="category-icon-bubble" style="background:'+color+'">'+icon+'</span><span class="category-icon-name">'+label+'</span></button>';
+ }).join('');
+}
+function bindCategoryGrid(gridId,selectId){
+ const grid=$(gridId),select=$(selectId);if(!grid||!select)return;
+ grid.addEventListener('click',e=>{const b=e.target.closest('[data-category-value]');if(!b)return;select.value=b.dataset.categoryValue;select.dispatchEvent(new Event('change',{bubbles:true}));renderCategoryIconGrid(selectId,gridId);});
+}
+bindCategoryGrid('categoryIconGrid','category');bindCategoryGrid('editCategoryIconGrid','editCategory');
+function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('');fillSubcategories($('category').value,'subcategory','subcategoryWrap');renderCategoryIconGrid('category','categoryIconGrid')}
 
 function customSubcategoryDialog(mode,initial=''){
  return new Promise(resolve=>{
