@@ -66,6 +66,10 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .settings-language-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#ffffff24;color:#fff;font-size:21px;flex:0 0 34px}
 .main-nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(255,255,255,.96);border-top:1px solid #dce9e3;box-shadow:0 -5px 18px #173b3018;backdrop-filter:blur(14px)}
 .main-nav button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border-radius:17px;background:#e8f4ef;color:#145b4f;font-size:12px;line-height:1.25;white-space:normal;box-shadow:0 2px 7px #143b3510}
+.entry-nav{display:flex;gap:9px;margin:14px 0 10px}
+.entry-nav button{flex:1;border:0;border-radius:12px;padding:11px;background:#e1ecea;color:#24524e;font:inherit;font-weight:700}
+.entry-nav button.active{background:#0f766e;color:#fff}
+.about-card{text-align:center;padding:22px 12px}.about-logo{width:64px;height:64px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;background:#e4f8eb;color:#087b4b;font-size:32px;font-weight:800}.about-card h3{margin:8px 0}
 .main-nav button.active{background:linear-gradient(145deg,#0c9b58,#087447);color:#fff;box-shadow:0 4px 12px #08744735}
 .nav-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font-size:24px;font-weight:800;line-height:1;background:#ffffffb8;color:#087b4b}
 .main-nav button.active .nav-icon{background:#ffffff28;color:#fff}
@@ -89,7 +93,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </style>
 </head>
 <body class="mobile-no-finance">
-<header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><span class="settings-language-icon" aria-hidden="true">⚙</span><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
+<header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
 <main>
 <section class="cards">
  <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
@@ -97,11 +101,15 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
  <div class="card summary-card balance"><small data-i18n="balance">ব্যালেন্স</small><strong class="balance" id="balance">৳ ০</strong></div>
 </section>
 
-<nav class="main-nav">
-<button class="active" data-tab="entry"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
-<button data-tab="history"><span class="nav-icon" aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
-<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
+<nav class="entry-nav" aria-label="হিসাবের পৃষ্ঠা">
+<button class="active" data-tab="entry"><span aria-hidden="true">＋</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
+<button data-tab="history"><span aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
+</nav>
+<nav class="main-nav" aria-label="প্রধান শর্টকাট">
+<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="report">রিপোর্ট</span></button>
+<button data-tab="backup"><span class="nav-icon" aria-hidden="true">☁</span><span data-i18n="backup">ব্যাকআপ</span></button>
 <button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
+<button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
 </nav>
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
@@ -129,7 +137,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <h2 data-i18n="reportBackup">রিপোর্ট ও ডেটা ব্যাকআপ</h2>
 <div class="report-month"><label data-i18n="reportMonth">রিপোর্টের মাস</label><input id="reportMonth" type="month"></div>
 <div class="monthly-metric"><label data-i18n="monthlyTotal">মাসের মোট হিসাব</label><div class="metric-tabs" role="group" aria-label="মাসের হিসাবের ধরন"><button type="button" class="metric-tab active" data-metric="income" data-i18n="reportIncome">আয়</button><button type="button" class="metric-tab" data-metric="expense" data-i18n="reportExpense">খরচ</button><button type="button" class="metric-tab" data-metric="balance" data-i18n="remaining">অবশিষ্ট</button></div><div id="monthSummary" class="report-summary" aria-live="polite">—</div></div>
-<div class="actions report-actions">
+<div class="actions report-actions" id="backupTools">
 <button class="primary" id="csvBtn" type="button">CSV রিপোর্ট ডাউনলোড</button>
 <button class="secondary" id="excelBtn" type="button">Excel (.xls) ডাউনলোড</button>
 <button class="secondary" id="pdfBtn" type="button">PDF রিপোর্ট / Print</button>
@@ -141,6 +149,11 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <p id="reportStatus" class="muted" role="status" aria-live="polite">ফাইল ফোনের Downloads ফোল্ডারে সংরক্ষণ হবে। Restore-এর জন্য ফোন থেকে JSON Backup নির্বাচন করুন।</p>
 </section>
 
+<section id="about" class="panel hidden">
+<h2 data-i18n="about">অ্যাপ পরিচিতি</h2>
+<div class="about-card"><div class="about-logo">৳</div><h3 data-i18n="appTitle">আমার হিসাব</h3>
+<p data-i18n="aboutDescription">দৈনন্দিন আয়-ব্যয়ের সহজ ও ব্যক্তিগত হিসাব রাখার অ্যাপ।</p>
+<p class="muted" data-i18n="offlineNote">আপনার হিসাব এই ডিভাইসে সংরক্ষিত থাকে এবং অফলাইনেও ব্যবহার করা যায়।</p></div></section>
 
 <section id="settings" class="panel hidden">
 <h2 data-i18n="settings">সেটিংস</h2>
@@ -254,7 +267,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 const LANG_KEY='amarHisab_language';
 const $=id=>document.getElementById(id);
 const translations={
- bn:{settings:'সেটিংস',language:'ভাষা',changeProfilePicture:'প্রোফাইল ছবি পরিবর্তন',settingsHelp:'এখান থেকে অ্যাপের ভাষা ও প্রোফাইল ছবি পরিবর্তন করতে পারবেন।',appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ (দিন-মাস-বছর)',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',subcategory:'উপ-ক্যাটাগরি',incomeSection:'আয়ের হিসাব',expenseSection:'খরচের হিসাব',profilePicture:'প্রোফাইল ছবি',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'বর্তমান হিসাবের সঙ্গে Backup-এর হিসাব যোগ করবেন?',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয়।'},
+ bn:{settings:'সেটিংস',language:'ভাষা',changeProfilePicture:'প্রোফাইল ছবি পরিবর্তন',settingsHelp:'এখান থেকে অ্যাপের ভাষা ও প্রোফাইল ছবি পরিবর্তন করতে পারবেন।',appTitle:'আমার হিসাব',tagline:'দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন',totalIncome:'মোট আয়',totalExpense:'মোট খরচ',balance:'ব্যালেন্স',newEntry:'নতুন এন্ট্রি',history:'লেনদেনের তালিকা',reportBackup:'রিপোর্ট ও ব্যাকআপ',report:'রিপোর্ট',backup:'ব্যাকআপ',about:'অ্যাপ পরিচিতি',aboutDescription:'দৈনন্দিন আয়-ব্যয়ের সহজ ও ব্যক্তিগত হিসাব রাখার অ্যাপ।',offlineNote:'আপনার হিসাব এই ডিভাইসে সংরক্ষিত থাকে এবং অফলাইনেও ব্যবহার করা যায়.',addTransaction:'নতুন আয় / খরচ যোগ করুন',type:'ধরন',expense:'খরচ',income:'আয়',date:'তারিখ (দিন-মাস-বছর)',amount:'পরিমাণ (টাকা)',category:'ক্যাটাগরি',amountPlaceholder:'যেমন ৫০০',notePlaceholder:'বিবরণ / নোট (ঐচ্ছিক)',saveTransaction:'হিসাব সংরক্ষণ করুন',startDate:'শুরুর তারিখ',endDate:'শেষ তারিখ',reportMonth:'রিপোর্টের মাস',monthlyTotal:'মাসের মোট হিসাব',subcategory:'উপ-ক্যাটাগরি',incomeSection:'আয়ের হিসাব',expenseSection:'খরচের হিসাব',profilePicture:'প্রোফাইল ছবি',downloadCsv:'CSV রিপোর্ট ডাউনলোড',takeBackup:'Backup নিন',restoreBackup:'Backup Restore',backupHelp:'আপনার তথ্য এই ডিভাইসের ব্রাউজার/অ্যাপের স্থানীয় স্টোরেজে থাকে। অ্যাপের ডেটা মুছে ফেললে তথ্য হারাতে পারে—তাই নিয়মিত Backup রাখুন।',footer:'আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে',editTransaction:'লেনদেন সম্পাদনা',saveChanges:'পরিবর্তন সংরক্ষণ',cancel:'বাতিল',deleteConfirmTitle:'হিসাব মুছে ফেলবেন?',deleteConfirmText:'এই লেনদেনটি স্থায়ীভাবে মুছে যাবে।',yesDelete:'হ্যাঁ, মুছুন',noTransactions:'এখনো কোনো লেনদেন যোগ করা হয়নি।',noNote:'কোনো নোট নেই',saved:'হিসাব সংরক্ষণ হয়েছে।',deletePrompt:'এই হিসাবটি মুছে ফেলবেন?',validAmount:'সঠিক পরিমাণ লিখুন।',reportIncome:'আয়',reportExpense:'খরচ',remaining:'অবশিষ্ট',backupMerge:'বর্তমান হিসাবের সঙ্গে Backup-এর হিসাব যোগ করবেন?',backupDone:'Backup Restore সম্পন্ন হয়েছে।',invalidBackup:'এই Backup ফাইলটি সঠিক নয়।'},
  en:{settings:'Settings',language:'Language',changeProfilePicture:'Change Profile Picture',settingsHelp:'Change the app language and profile picture here.',appTitle:'My Hisab',tagline:'Personal daily income & expense tracker • Offline',totalIncome:'Total Income',totalExpense:'Total Expense',balance:'Balance',newEntry:'New Entry',history:'Transactions',reportBackup:'Reports & Backup',addTransaction:'Add Income / Expense',type:'Type',expense:'Expense',income:'Income',date:'Date (DD-MM-YYYY)',amount:'Amount (BDT)',category:'Category',amountPlaceholder:'e.g. 500',notePlaceholder:'Description / note (optional)',saveTransaction:'Save Transaction',startDate:'Start Date',endDate:'End Date',reportMonth:'Report Month',monthlyTotal:'Monthly Summary',subcategory:'Subcategory',incomeSection:'Income',expenseSection:'Expenses',profilePicture:'Profile picture',downloadCsv:'Download CSV Report',takeBackup:'Backup',restoreBackup:'Restore Backup',backupHelp:'Your data is stored locally on this device. Clearing app data may erase it, so please keep regular backups.',footer:'My Hisab • For personal use • Works without internet',editTransaction:'Edit Transaction',saveChanges:'Save Changes',cancel:'Cancel',deleteConfirmTitle:'Delete this transaction?',deleteConfirmText:'This transaction will be permanently deleted.',yesDelete:'Yes, Delete',noTransactions:'No transactions have been added yet.',noNote:'No note',saved:'Transaction saved.',deletePrompt:'Delete this transaction?',validAmount:'Please enter a valid amount.',reportIncome:'Income',reportExpense:'Expense',remaining:'Balance',backupMerge:'Merge backup transactions with your current records?',backupDone:'Backup restored successfully.',invalidBackup:'This backup file is invalid.'}
 };
 let currentLang=localStorage.getItem(LANG_KEY)||'bn';
@@ -355,7 +368,7 @@ $('deleteCustomSubcategory').addEventListener('click',async()=>{
 });
 
 $('type').addEventListener('change',updateCats);$('category').addEventListener('change',()=>fillSubcategories($('category').value,'subcategory','subcategoryWrap'));$('subcategory').addEventListener('change',refreshCustomSubcategoryActions);updateCats();
-document.querySelectorAll('.main-nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report','finance','settings'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));render()});
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const tab=b.dataset.tab,target=tab==='backup'?'report':tab;document.querySelectorAll('.main-nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.entry-nav button').forEach(x=>x.classList.toggle('active',x===b));['entry','history','report','finance','settings','about'].forEach(id=>{const el=$(id);if(el)el.classList.toggle('hidden',id!==target)});if(tab==='backup'){setTimeout(()=>$('backupTools').scrollIntoView({behavior:'smooth',block:'center'}),80)}render()});
 $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').value);if(!(amount>0))return;
 entries.push({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,subcategory:$('subcategory').value||'',note:$('note').value.trim()});
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
