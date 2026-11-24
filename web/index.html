@@ -352,22 +352,22 @@ function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].ma
 function customSubcategoryDialog(mode,initial=''){
  return new Promise(resolve=>{
   const overlay=$('customSubcategoryModal'),title=$('customSubcategoryModalTitle'),icon=$('customSubcategoryModalIcon'),label=$('customSubcategoryModalLabel'),input=$('customSubcategoryModalInput'),inputArea=$('customSubcategoryInputArea'),message=$('customSubcategoryModalMessage'),saveBtn=$('customSubcategoryModalSave'),cancelBtn=$('customSubcategoryModalCancel'),closeBtn=$('customSubcategoryModalClose');
-  const en=currentLang==='en',isDelete=mode==='delete';
-  title.textContent=isDelete?(en?'Delete subcategory?':'মুছে ফেলবেন?'):(mode==='edit'?(en?'Edit subcategory':'উপ-ক্যাটাগরি সম্পাদনা'):(en?'Add a new subcategory':'নতুন উপ-ক্যাটাগরি যোগ করুন'));
-  icon.textContent=isDelete?'▤':(mode==='edit'?'✎':'＋');
+  const en=currentLang==='en',isDelete=mode==='delete',isNotice=mode==='error';
+  title.textContent=isNotice?(en?'Notice':'সতর্কবার্তা'):(isDelete?(en?'Delete subcategory?':'মুছে ফেলবেন?'):(mode==='edit'?(en?'Edit subcategory':'উপ-ক্যাটাগরি সম্পাদনা'):(en?'Add a new subcategory':'নতুন উপ-ক্যাটাগরি যোগ করুন')));
+  icon.textContent=isNotice?'!':(isDelete?'▤':(mode==='edit'?'✎':'＋'));
   icon.style.background=isDelete?'#fff0ef':(mode==='edit'?'#eaf2ff':'#e7f7ed');
   icon.style.color=isDelete?'#e32620':(mode==='edit'?'#1675ed':'#078348');
-  inputArea.classList.toggle('hidden',isDelete);message.classList.toggle('hidden',!isDelete);
+  inputArea.classList.toggle('hidden',isDelete||isNotice);message.classList.toggle('hidden',!isDelete&&!isNotice);
   label.textContent=en?'Enter subcategory name:':'ক্যাটাগরির নাম লিখুন:';
   input.value=initial;
-  message.textContent=en?'Do you want to delete “'+initial+'”?':'আপনি কি “'+initial+'” উপ-ক্যাটাগরিটি মুছে ফেলতে চান?';
-  saveBtn.textContent=isDelete?(en?'Yes, Delete':'হ্যাঁ'): (mode==='edit'?(en?'Update':'আপডেট করুন'):(en?'Save':'সংরক্ষণ'));
-  cancelBtn.textContent=en?'Cancel':'বাতিল';
+  message.textContent=isNotice?initial:(en?'Do you want to delete “'+initial+'”?':'আপনি কি “'+initial+'” উপ-ক্যাটাগরিটি মুছে ফেলতে চান?');
+  saveBtn.textContent=isNotice?(en?'OK':'ঠিক আছে'):(isDelete?(en?'Yes, Delete':'হ্যাঁ'): (mode==='edit'?(en?'Update':'আপডেট করুন'):(en?'Save':'সংরক্ষণ')));
+  cancelBtn.textContent=en?'Cancel':'বাতিল';cancelBtn.classList.toggle('hidden',isNotice);
   saveBtn.className='custom-modal-'+(isDelete?'delete':(mode==='edit'?'edit':'save'));
   overlay.classList.remove('hidden');
-  if(!isDelete){setTimeout(()=>{input.focus();input.select()},40)}
+  if(!isDelete&&!isNotice){setTimeout(()=>{input.focus();input.select()},40)}
   const finish=value=>{overlay.classList.add('hidden');saveBtn.removeEventListener('click',onSave);cancelBtn.removeEventListener('click',onCancel);closeBtn.removeEventListener('click',onCancel);overlay.removeEventListener('click',onBackdrop);input.removeEventListener('keydown',onKey);resolve(value)};
-  const onSave=()=>finish(isDelete?true:input.value.trim());
+  const onSave=()=>finish(isDelete?true:(isNotice?null:input.value.trim()));
   const onCancel=()=>finish(null);
   const onBackdrop=e=>{if(e.target===overlay)onCancel()};
   const onKey=e=>{if(e.key==='Enter'&&!isDelete){e.preventDefault();onSave()}if(e.key==='Escape')onCancel()};
@@ -378,7 +378,7 @@ async function addCustomSubcategory(){
  const p=$('category').value;if(!p)return;
  const value=await customSubcategoryDialog('add');
  if(!value)return;
- if(allSubcategories(p).some(x=>x.toLowerCase()===value.toLowerCase())){await customSubcategoryDialog('delete',currentLang==='en'?'This name already exists.':'এই নামটি আগে থেকেই আছে।');return}
+ if(allSubcategories(p).some(x=>x.toLowerCase()===value.toLowerCase())){await customSubcategoryDialog('error',currentLang==='en'?'This name already exists.':'এই নামটি আগে থেকেই আছে।');return}
  (customSubcats[p]||(customSubcats[p]=[])).push(value);saveCustomSubcats();fillSubcategories(p,'subcategory','subcategoryWrap',value);
 }
 $('addCustomSubcategory').addEventListener('click',addCustomSubcategory);
