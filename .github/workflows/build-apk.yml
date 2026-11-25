@@ -19,11 +19,11 @@ jobs:
           from pathlib import Path
           import re
           html = Path('app/src/main/assets/index.html').read_text(encoding='utf-8')
-          scripts = re.findall(r'<script[^>]*>([\\s\\S]*?)</script>', html, re.I)
+          scripts = re.findall(r'<script[^>]*>([\s\S]*?)</script>', html, re.I)
           assert scripts, 'No inline JavaScript found'
-          Path('/tmp/amar-hisab-inline.js').write_text('\\n'.join(scripts), encoding='utf-8')
-          ids = set(re.findall(r'\\bid=["\\']([^"\\']+)', html))
-          refs = set(re.findall(r"\\$\\(['\\\"]([^'\\\"]+)['\\\"]\\)", '\\n'.join(scripts)))
+          Path('/tmp/amar-hisab-inline.js').write_text('\n'.join(scripts), encoding='utf-8')
+          ids = set(re.findall(r'\bid=["\']([^"\']+)', html))
+          refs = set(re.findall(r"\$\(['\"]([^'\"]+)['\"]\)", '\n'.join(scripts)))
           missing = sorted(refs - ids)
           assert not missing, f'Missing DOM ids: {missing}'
           nav = html.find('class="main-nav"')
