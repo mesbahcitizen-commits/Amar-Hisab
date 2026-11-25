@@ -166,11 +166,11 @@ body.home-active .main-nav button{min-height:68px}
 .home-dashboard footer{padding:18px 4px 4px;font-size:12px}
 @media(max-width:420px){.home-actions button{font-size:15px;min-height:72px}.home-category-card{min-height:92px;padding:10px;gap:9px}.home-category-icon{width:46px;height:46px;flex-basis:46px;font-size:24px}.home-category-copy strong{font-size:15px}.home-category-copy small{font-size:11px}.home-month-card{padding:15px}.home-month-heading{align-items:flex-start;flex-direction:column}.home-month-heading input{max-width:none}.home-month-metric strong{font-size:15px}}
 </style></head>
-<body>
+<body class="home-active">
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
 
 <main><nav class="main-nav" aria-label="প্রধান শর্টকাট">
-<button data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
+<button class="active" data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
 <button data-tab="report"><span class="nav-icon" aria-hidden="true">📊</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
 <button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
 <button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
@@ -201,12 +201,12 @@ body.home-active .main-nav button{min-height:68px}
 </section>
 
 
-<nav class="entry-nav" aria-label="হিসাবের পৃষ্ঠা">
+<nav class="entry-nav hidden" aria-label="হিসাবের পৃষ্ঠা">
 <button class="active" data-tab="entry"><span aria-hidden="true">＋</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
 <button data-tab="history"><span aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
 </nav>
 
-<section id="entry" class="panel">
+<section id="entry" class="panel hidden">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
 <form id="entryForm">
 <div><label data-i18n="type">ধরন</label><select id="type"><option value="expense" data-i18n="expense">খরচ</option><option value="income" data-i18n="income">আয়</option></select></div>
