@@ -63,7 +63,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .custom-subcategory-modal .custom-modal-message{font-size:16px;line-height:1.6;margin:8px 0 18px;color:#172b2a}
 
 
-.main-nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(255,255,255,.96);border-top:1px solid #dce9e3;box-shadow:0 -5px 18px #173b3018;backdrop-filter:blur(14px)}
+.main-nav{position:relative;z-index:5;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 12px 14px;padding:8px;border:1px solid #dce9e3;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 4px 14px #173b3012;backdrop-filter:blur(14px)}
 .main-nav button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border-radius:17px;background:#e8f4ef;color:#145b4f;font-size:12px;line-height:1.25;white-space:normal;box-shadow:0 2px 7px #143b3510}
 .entry-nav{display:flex;gap:9px;margin:14px 0 10px}
 .entry-nav button{flex:1;border:0;border-radius:12px;padding:11px;background:#e1ecea;color:#24524e;font:inherit;font-weight:700}
@@ -85,7 +85,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .summary-card.balance:before{content:"৳";background:#eaf2ff;color:#2563eb}
 .report-actions button:before{display:inline-block;margin-right:8px;font-size:18px;vertical-align:-1px}
 #csvBtn:before{content:"▤"}#excelBtn:before{content:"▦"}#pdfBtn:before{content:"▧"}#backupBtn:before{content:"☁"}#restoreBtn:before{content:"↥"}
-@media(max-width:420px){body{padding-bottom:88px}.main-nav{gap:5px}.main-nav button{font-size:11px;min-height:62px}.category-icon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-icon-option{min-height:58px;padding:7px}}
+@media(max-width:420px){body{padding-bottom:18px}.main-nav{gap:5px;margin:8px 8px 12px;padding:6px}.main-nav button{font-size:11px;min-height:58px}.category-icon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-icon-option{min-height:58px;padding:7px}}
 
 @media(max-width:420px){.cards{gap:6px}.card{padding:11px 8px}.card strong{font-size:15px}form{grid-template-columns:1fr}.wide,textarea{grid-column:auto}}
 .mobile-no-finance [data-tab="finance"],.mobile-no-finance #finance{display:none!important}
@@ -100,6 +100,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </head>
 <body class="mobile-no-finance">
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 id="homeTitle" data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
+<nav class="main-nav" aria-label="প্রধান শর্টকাট">
+<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="report">রিপোর্ট</span></button>
+<button data-tab="backup"><span class="nav-icon" aria-hidden="true">☁</span><span data-i18n="backup">ব্যাকআপ</span></button>
+<button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
+<button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
+</nav>
 <main>
 <section class="cards">
  <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
@@ -114,12 +120,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <nav class="entry-nav hidden" aria-label="হিসাবের পৃষ্ঠা">
 <button class="active" data-tab="entry"><span aria-hidden="true">＋</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
 <button data-tab="history"><span aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
-</nav>
-<nav class="main-nav" aria-label="প্রধান শর্টকাট">
-<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="report">রিপোর্ট</span></button>
-<button data-tab="backup"><span class="nav-icon" aria-hidden="true">☁</span><span data-i18n="backup">ব্যাকআপ</span></button>
-<button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
-<button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
 </nav>
 <section id="entry" class="panel hidden">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
@@ -383,9 +383,9 @@ $('deleteCustomSubcategory').addEventListener('click',async()=>{
 $('type').addEventListener('change',updateCats);$('category').addEventListener('change',()=>fillSubcategories($('category').value,'subcategory','subcategoryWrap'));$('subcategory').addEventListener('change',refreshCustomSubcategoryActions);updateCats();
 function showHome(){['entry','history','report','finance','settings','about'].forEach(id=>$(id).classList.add('hidden'));$('homeDashboard').classList.remove('hidden');document.querySelector('.entry-nav').classList.add('hidden');document.querySelectorAll('.main-nav button').forEach(x=>x.classList.remove('active'));renderHomeCategories();renderHomeSummary();render()}
 function showEntryView(id){$('homeDashboard').classList.add('hidden');['entry','history','report','finance','settings','about'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelector('.entry-nav').classList.remove('hidden');document.querySelectorAll('.entry-nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));document.querySelectorAll('.main-nav button').forEach(x=>x.classList.remove('active'));render()}
-function showBottomView(tab,button){const target=tab==='backup'?'report':tab;$('homeDashboard').classList.add('hidden');$('entry').classList.add('hidden');$('history').classList.add('hidden');document.querySelector('.entry-nav').classList.add('hidden');['report','finance','settings','about'].forEach(id=>$(id).classList.toggle('hidden',id!==target));document.querySelectorAll('.main-nav button').forEach(x=>x.classList.toggle('active',x===button));if(tab==='backup')setTimeout(()=>$('backupTools').scrollIntoView({behavior:'smooth',block:'center'}),80);render()}
+function showTopShortcut(tab,button){const target=tab==='backup'?'report':tab;$('homeDashboard').classList.add('hidden');$('entry').classList.add('hidden');$('history').classList.add('hidden');document.querySelector('.entry-nav').classList.add('hidden');['report','finance','settings','about'].forEach(id=>$(id).classList.toggle('hidden',id!==target));document.querySelectorAll('.main-nav button').forEach(x=>x.classList.toggle('active',x===button));if(tab==='backup')setTimeout(()=>$('backupTools').scrollIntoView({behavior:'smooth',block:'center'}),80);render()}
 document.querySelectorAll('.entry-nav button').forEach(b=>b.addEventListener('click',()=>showEntryView(b.dataset.tab)));
-document.querySelectorAll('.main-nav button').forEach(b=>b.addEventListener('click',()=>showBottomView(b.dataset.tab,b)));
+document.querySelectorAll('.main-nav button').forEach(b=>b.addEventListener('click',()=>showTopShortcut(b.dataset.tab,b)));
 $('homeNewEntry').addEventListener('click',()=>showEntryView('entry'));$('homeHistory').addEventListener('click',()=>showEntryView('history'));
 $('homeCategoryGrid').addEventListener('click',e=>{const b=e.target.closest('[data-home-category]');if(!b)return;$('type').value='expense';updateCats();$('category').value=b.dataset.homeCategory;$('category').dispatchEvent(new Event('change',{bubbles:true}));showEntryView('entry')});
 $('homeMonth').value=today.slice(0,7);$('homeMonth').addEventListener('change',renderHomeSummary);$('homeTitle').addEventListener('click',showHome);
