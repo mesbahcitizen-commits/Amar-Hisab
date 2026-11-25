@@ -31,11 +31,15 @@ jobs:
           nav = html.find('class="main-nav"')
           header_end = html.find('</header>')
           main = html.find('<main')
-          assert 0 <= header_end < nav < main, 'Shortcut navigation must be below header and above main content'
-          for tab in ('home', 'report', 'backup', 'settings', 'about'):
+          summary = html.find('<section class="cards"')
+          assert 0 <= header_end < main < nav < summary, 'Shortcut navigation must follow the header within main content'
+          for tab in ('home', 'report', 'finance', 'settings', 'about'):
               count = len(re.findall(r'data-tab="' + tab + r'"', html))
               assert count == 1, f'Expected exactly one {tab} shortcut, found {count}'
           assert re.search(r'<nav class="main-nav"[^>]*>\s*<button[^>]*data-tab="home"', html), 'Home must be the first top shortcut'
+          assert "format:'amar-hisab-cross-platform'" in js and "version:5" in js, 'Cross-platform backup format is missing'
+          for field in ('dpsDeposits', 'loanUses', 'customSubcats'):
+              assert field in js, f'Cross-platform backup field missing: {field}'
           for element_id in ('historyTotals', 'historyIncomeTotal', 'historyExpenseTotal'):
               assert f'id="{element_id}"' in html, f'Missing date-range summary element: {element_id}'
           assert 'historyIncome=incomeList.reduce' in js and 'historyExpense=expenseList.reduce' in js, 'Date-range totals must be calculated from filtered transactions'
