@@ -140,6 +140,13 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </style></head>
 <body>
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
+<nav class="main-nav" aria-label="প্রধান শর্টকাট">
+<button data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
+<button data-tab="report"><span class="nav-icon" aria-hidden="true">📊</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
+<button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
+<button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
+<button data-tab="finance"><span class="nav-icon" aria-hidden="true">🏦</span><span id="financeTabLabel">অন্যান্য হিসাব</span></button>
+</nav>
 <main>
 <section class="cards">
  <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
@@ -151,13 +158,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 <button class="active" data-tab="entry"><span aria-hidden="true">＋</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
 <button data-tab="history"><span aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
 </nav>
-<nav class="main-nav" aria-label="প্রধান শর্টকাট">
-<button data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
-<button data-tab="report"><span class="nav-icon" aria-hidden="true">📊</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
-<button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
-<button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
-<button data-tab="finance"><span class="nav-icon" aria-hidden="true">🏦</span><span id="financeTabLabel">অন্যান্য হিসাব</span></button>
-</nav>
+
 <section id="entry" class="panel">
 <h2 data-i18n="addTransaction">নতুন আয় / খরচ যোগ করুন</h2>
 <form id="entryForm">
