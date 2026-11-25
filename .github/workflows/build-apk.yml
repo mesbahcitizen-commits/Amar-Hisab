@@ -32,7 +32,7 @@ jobs:
           header_end = html.find('</header>')
           main = html.find('<main')
           summary = html.find('<section class="cards"')
-          assert 0 <= header_end < main < nav < summary, 'Shortcut navigation must follow the header within main content'
+          assert 0 <= header_end < main < summary < nav, 'Shortcut navigation must follow the monthly summary within main content'
           for tab in ('home', 'report', 'finance', 'settings', 'about'):
               count = len(re.findall(r'data-tab="' + tab + r'"', html))
               assert count == 1, f'Expected exactly one {tab} shortcut, found {count}'
