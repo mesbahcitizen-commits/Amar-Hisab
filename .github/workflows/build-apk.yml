@@ -35,7 +35,10 @@ jobs:
           for tab in ('home', 'report', 'backup', 'settings', 'about'):
               count = len(re.findall(r'data-tab="' + tab + r'"', html))
               assert count == 1, f'Expected exactly one {tab} shortcut, found {count}'
-          assert re.search(r'<nav class="main-nav"[^>]*>\\s*<button[^>]*data-tab="home"', html), 'Home must be the first top shortcut'
+          assert re.search(r'<nav class="main-nav"[^>]*>\s*<button[^>]*data-tab="home"', html), 'Home must be the first top shortcut'
+          for element_id in ('historyTotals', 'historyIncomeTotal', 'historyExpenseTotal'):
+              assert f'id="{element_id}"' in html, f'Missing date-range summary element: {element_id}'
+          assert 'historyIncome=incomeList.reduce' in js and 'historyExpense=expenseList.reduce' in js, 'Date-range totals must be calculated from filtered transactions'
           print('HTML structure and shortcut checks passed')
           PY
           node --check /tmp/amar-hisab-inline.js
