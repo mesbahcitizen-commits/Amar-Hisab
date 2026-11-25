@@ -100,6 +100,31 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .finance-confirm-actions button{min-width:86px;padding:10px 18px;border:0;border-radius:7px;font-weight:700;cursor:pointer}
 #financeConfirmYes{background:#10796f;color:white}
 #financeConfirmNo{background:#edf1f3;color:#263238}
+</style><style id="refined-popup-ui"> 
+/* Refined pop-up and icon-box styling */
+.modal-backdrop{background:rgba(12,24,39,.48);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);animation:popupFade .18s ease-out}
+.modal-card{border:1px solid rgba(255,255,255,.75);border-radius:24px;padding:24px;background:linear-gradient(155deg,#fff 0%,#f8fcfa 100%);box-shadow:0 22px 65px rgba(15,45,38,.22);animation:popupRise .24s cubic-bezier(.2,.8,.2,1)}
+.modal-card h2{color:#123c32}
+.modal-actions button,.custom-subcategory-modal .modal-actions button{min-height:46px;border-radius:14px;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.modal-actions button:hover,.custom-subcategory-modal .modal-actions button:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 7px 16px rgba(15,45,38,.14)}
+.modal-actions button:active,.custom-subcategory-modal .modal-actions button:active{transform:scale(.98)}
+.custom-subcategory-modal{border:1px solid #e3f1e9;box-shadow:0 24px 70px rgba(10,75,48,.24)}
+.custom-subcategory-modal .custom-modal-icon{width:50px;height:50px;flex-basis:50px;border-radius:17px;background:linear-gradient(145deg,#d8fbe6,#a7f3d0);color:#087b4b;box-shadow:inset 0 1px 0 #ffffff,0 5px 13px #087b4b20}
+.custom-subcategory-modal .custom-modal-close{width:36px;height:36px;border-radius:12px;background:#f0f5f3;transition:background .18s,transform .18s}
+.custom-subcategory-modal .custom-modal-close:hover{background:#ffe8e6;color:#c62828;transform:rotate(90deg)}
+.custom-subcategory-modal input{border-color:#c6e6d5;background:#fbfefc;transition:border-color .18s,box-shadow .18s}
+.custom-subcategory-modal input:focus{border-color:#0b9a58;box-shadow:0 0 0 4px #0b9a5818}
+.category-icon-option{position:relative;overflow:hidden;min-height:72px;border:1px solid #e5eee9;border-radius:18px;background:linear-gradient(145deg,#fff,#f7fbf8);box-shadow:0 3px 10px rgba(20,59,53,.07);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.category-icon-option:hover{transform:translateY(-3px);border-color:#9ad9b5;box-shadow:0 9px 20px rgba(8,120,72,.13)}
+.category-icon-option.selected{border:2px solid #0b9a58;background:linear-gradient(145deg,#edfff4,#dff8e9);box-shadow:0 5px 16px #0b9a5826}
+.category-icon-bubble{width:44px;height:44px;flex-basis:44px;border-radius:15px;box-shadow:0 4px 10px rgba(0,0,0,.12);transition:transform .2s ease}
+.category-icon-option:hover .category-icon-bubble{transform:scale(1.08) rotate(-4deg)}
+#financeConfirmBox{border:1px solid #e4f1eb;border-radius:24px;padding:26px;background:linear-gradient(145deg,#fff,#f6fcf8);box-shadow:0 24px 70px rgba(0,0,0,.25);animation:popupRise .24s cubic-bezier(.2,.8,.2,1)}
+#financeConfirmYes,#financeConfirmNo{min-height:42px;border-radius:13px;transition:transform .18s,box-shadow .18s}
+#financeConfirmYes:hover,#financeConfirmNo:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12)}
+@keyframes popupFade{from{opacity:0}to{opacity:1}}
+@keyframes popupRise{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.modal-backdrop,.modal-card,#financeConfirmBox,.category-icon-option,.category-icon-bubble,.modal-actions button{animation:none!important;transition:none!important}}
 </style></head>
 <body>
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
