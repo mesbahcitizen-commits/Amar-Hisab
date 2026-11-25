@@ -64,7 +64,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 .custom-subcategory-modal .custom-modal-message{font-size:16px;line-height:1.6;margin:8px 0 18px;color:#172b2a}
 
 
-.main-nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;overflow:visible;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(255,255,255,.96);border-top:1px solid #dce9e3;box-shadow:0 -5px 18px #173b3018;backdrop-filter:blur(14px)}
+.main-nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;overflow:visible;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(255,255,255,.96);border-top:1px solid #dce9e3;box-shadow:0 -5px 18px #173b3018;backdrop-filter:blur(14px)}
 .main-nav button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border-radius:17px;background:#e8f4ef;color:#145b4f;font-size:12px;line-height:1.25;white-space:normal;box-shadow:0 2px 7px #143b3510}
 .entry-nav{display:flex;gap:9px;margin:14px 0 10px}
 .entry-nav button{flex:1;border:0;border-radius:12px;padding:11px;background:#e1ecea;color:#24524e;font:inherit;font-weight:700}
@@ -125,6 +125,18 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 @keyframes popupFade{from{opacity:0}to{opacity:1}}
 @keyframes popupRise{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.modal-backdrop,.modal-card,#financeConfirmBox,.category-icon-option,.category-icon-bubble,.modal-actions button{animation:none!important;transition:none!important}}
+</style><style id="category-actions-and-report-nav">
+/* Colorful, smooth subcategory action tiles */
+#customSubcategoryActions{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 2px}
+#customSubcategoryActions button{flex:1 1 105px;min-height:48px;padding:11px 14px;border:1px solid transparent;border-radius:16px;font:inherit;font-size:14px;font-weight:750;cursor:pointer;box-shadow:0 4px 12px rgba(22,45,38,.09);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+#customSubcategoryActions button:hover:not(:disabled){transform:translateY(-3px);filter:saturate(1.12);box-shadow:0 9px 18px rgba(22,45,38,.15)}
+#customSubcategoryActions button:active:not(:disabled){transform:scale(.97)}
+#addCustomSubcategory{background:linear-gradient(135deg,#16a765,#087b4b);color:#fff;border-color:#07834e!important}
+#editCustomSubcategory{background:linear-gradient(135deg,#e8f2ff,#d7e8ff);color:#1d5db5;border-color:#b9d5ff!important}
+#deleteCustomSubcategory{background:linear-gradient(135deg,#fff0ef,#ffe0dd);color:#bd3028;border-color:#ffc8c2!important}
+#customSubcategoryActions button:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.main-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(prefers-reduced-motion:reduce){#customSubcategoryActions button{transition:none!important}}
 </style></head>
 <body>
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
@@ -141,8 +153,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 </nav>
 <nav class="main-nav" aria-label="প্রধান শর্টকাট">
 <button data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
-<button data-tab="report"><span class="nav-icon" aria-hidden="true">▥</span><span data-i18n="report">রিপোর্ট</span></button>
-<button data-tab="backup"><span class="nav-icon" aria-hidden="true">☁</span><span data-i18n="backup">ব্যাকআপ</span></button>
+<button data-tab="report"><span class="nav-icon" aria-hidden="true">📊</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
 <button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
 <button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
 <button data-tab="finance"><span class="nav-icon" aria-hidden="true">🏦</span><span id="financeTabLabel">অন্যান্য হিসাব</span></button>
