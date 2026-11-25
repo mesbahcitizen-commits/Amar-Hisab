@@ -137,22 +137,69 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
 #customSubcategoryActions button:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
 .main-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(prefers-reduced-motion:reduce){#customSubcategoryActions button{transition:none!important}}
+</style><style id="apk-home-dashboard">
+body.home-active{padding-bottom:18px}
+body.home-active .main-nav{position:static;left:auto;right:auto;bottom:auto;margin:0 0 16px;z-index:1;border:1px solid #dce9e3;border-radius:22px;padding:8px;background:rgba(255,255,255,.96);box-shadow:0 5px 18px #173b3018}
+body.home-active .main-nav button{min-height:68px}
+.home-dashboard{display:block}.home-dashboard.hidden{display:none!important}
+.home-dashboard .cards{margin:0 0 18px}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 18px}
+.home-actions button{min-height:78px;border:0;border-radius:22px;padding:12px 10px;font:inherit;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 5px 14px rgba(22,45,38,.08)}
+.home-action-primary{background:linear-gradient(135deg,#0c9b65,#087b4b);color:#fff}.home-action-secondary{background:linear-gradient(135deg,#e8f6ef,#dff1e8);color:#075b47}
+.home-category-heading{display:flex;align-items:center;gap:12px;padding:17px 18px;margin:0 0 12px;border-radius:20px;background:linear-gradient(120deg,#eff9f1,#e8f4e9);color:#075b47;font-size:19px;font-weight:850}
+.home-category-heading>span:first-child{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#f4c542;color:#fff}
+.home-category-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-category-card{display:flex;align-items:center;gap:12px;min-height:100px;padding:12px;border:1px solid #e5eeeb;border-radius:23px;background:#fff;color:#172b2a;text-align:left;font:inherit;box-shadow:0 5px 16px rgba(20,59,53,.07);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.home-category-card.selected{border:2px solid #0b9a58;background:linear-gradient(145deg,#f1fff6,#e7f8ee);box-shadow:0 5px 16px #0b9a5820}
+.home-category-icon{display:grid;place-items:center;width:52px;height:52px;flex:0 0 52px;border-radius:50%;color:#fff;font-size:27px}
+.home-category-copy{min-width:0;flex:1}.home-category-copy strong{display:block;font-size:16px;line-height:1.25;overflow-wrap:anywhere}
+.home-category-copy small{display:block;margin-top:5px;color:#84928f;font-size:12px;line-height:1.25}.home-category-arrow{color:#47736a;font-size:24px}
+.home-add-more-wrap{margin:14px 0 18px}
+#homeAddMore{width:100%;min-height:48px;padding:11px 14px;border:1px solid #07834e;border-radius:16px;background:linear-gradient(135deg,#16a765,#087b4b);color:#fff;font:inherit;font-size:15px;font-weight:750;cursor:pointer;box-shadow:0 4px 12px rgba(22,45,38,.09);transition:transform .2s ease,box-shadow .2s ease}
+#homeAddMore:hover{transform:translateY(-2px);box-shadow:0 9px 18px rgba(22,45,38,.15)}
+.home-month-card{padding:18px;border-radius:24px;background:#fff;box-shadow:0 5px 18px rgba(20,59,53,.07)}
+.home-month-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.home-month-heading h2{margin:0;font-size:18px}
+.home-month-heading input{max-width:150px;padding:9px;border-radius:13px}
+.home-month-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.home-month-metric{display:flex;flex-direction:column;gap:8px;align-items:center;padding:13px 6px;border-radius:17px;background:#eff9f1;color:#16834a;font-size:13px}
+.home-month-metric strong{font-size:17px;font-weight:850}.home-month-metric.expense{background:#fff1f0;color:#c7352c}.home-month-metric.balance{background:#eef4ff;color:#2563a9}
+.home-dashboard footer{padding:18px 4px 4px;font-size:12px}
+@media(max-width:420px){.home-actions button{font-size:15px;min-height:72px}.home-category-card{min-height:92px;padding:10px;gap:9px}.home-category-icon{width:46px;height:46px;flex-basis:46px;font-size:24px}.home-category-copy strong{font-size:15px}.home-category-copy small{font-size:11px}.home-month-card{padding:15px}.home-month-heading{align-items:flex-start;flex-direction:column}.home-month-heading input{max-width:none}.home-month-metric strong{font-size:15px}}
 </style></head>
 <body>
 <header><div class="header-row"><div class="brand-area"><label class="profile-avatar" id="profileAvatar" for="profileImageInput" title="প্রোফাইল ছবি পরিবর্তন"><img id="profileImage" alt="Profile picture"><span id="profileInitial">অ</span><span class="avatar-edit">✎</span><input id="profileImageInput" type="file" accept="image/*" aria-label="Choose profile picture"></label><div class="brand-copy"><h1 data-i18n="appTitle">আমার হিসাব</h1><p data-i18n="tagline">দৈনন্দিন আয়-ব্যয়ের ব্যক্তিগত হিসাব • অফলাইন</p></div></div><select id="languageSelect" aria-label="Language" class="language-select"><option value="bn">বাংলা</option><option value="en">English</option></select></div></header>
-<nav class="main-nav" aria-label="প্রধান শর্টকাট">
+
+<main><nav class="main-nav" aria-label="প্রধান শর্টকাট">
 <button data-tab="home"><span class="nav-icon" aria-hidden="true">⌂</span><span data-i18n="home">হোম</span></button>
 <button data-tab="report"><span class="nav-icon" aria-hidden="true">📊</span><span data-i18n="reportBackup">রিপোর্ট ও ব্যাকআপ</span></button>
 <button data-tab="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span data-i18n="settings">সেটিংস</span></button>
 <button data-tab="about"><span class="nav-icon" aria-hidden="true">ⓘ</span><span data-i18n="about">পরিচিতি</span></button>
 <button data-tab="finance"><span class="nav-icon" aria-hidden="true">🏦</span><span id="financeTabLabel">অন্যান্য হিসাব</span></button>
 </nav>
-<main>
+<section id="home" class="home-dashboard">
 <section class="cards">
  <div class="card summary-card income"><small data-i18n="totalIncome">মোট আয়</small><strong class="income" id="totalIncome">৳ ০</strong></div>
  <div class="card summary-card expense"><small data-i18n="totalExpense">মোট খরচ</small><strong class="expense" id="totalExpense">৳ ০</strong></div>
  <div class="card summary-card balance"><small data-i18n="balance">ব্যালেন্স</small><strong class="balance" id="balance">৳ ০</strong></div>
 </section>
+<div class="home-actions">
+ <button type="button" class="home-action-primary" data-tab="entry"><span aria-hidden="true">▤</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
+ <button type="button" class="home-action-secondary" data-tab="history"><span aria-hidden="true">▤</span><span data-i18n="history">লেনদেনের তালিকা</span></button>
+</div>
+<div class="home-category-heading"><span aria-hidden="true">▦</span><span data-i18n="expense">খরচের ক্যাটাগরি</span></div>
+<div id="homeCategoryGrid" class="home-category-grid" role="group" aria-label="Expense categories"></div>
+<div class="home-add-more-wrap"><button type="button" id="homeAddMore">＋ Add More</button></div>
+<section class="home-month-card">
+ <div class="home-month-heading"><h2 data-i18n="monthlyTotal">এই মাসের সারসংক্ষেপ</h2><input id="homeMonthPicker" type="month" aria-label="Summary month"></div>
+ <div class="home-month-metrics">
+  <div class="home-month-metric income"><span data-i18n="reportIncome">আয়</span><strong id="homeMonthlyIncome">৳ ০</strong></div>
+  <div class="home-month-metric expense"><span data-i18n="reportExpense">খরচ</span><strong id="homeMonthlyExpense">৳ ০</strong></div>
+  <div class="home-month-metric balance"><span data-i18n="remaining">অবশিষ্ট</span><strong id="homeMonthlyBalance">৳ ০</strong></div>
+ </div>
+</section>
+<footer data-i18n="tagline">আমার হিসাব • ব্যক্তিগত ব্যবহারের জন্য • ইন্টারনেট ছাড়াই কাজ করে</footer>
+</section>
+
 
 <nav class="entry-nav" aria-label="হিসাবের পৃষ্ঠা">
 <button class="active" data-tab="entry"><span aria-hidden="true">＋</span><span data-i18n="newEntry">নতুন এন্ট্রি</span></button>
@@ -454,6 +501,25 @@ function bindCategoryGrid(gridId,selectId){
  grid.addEventListener('click',e=>{const b=e.target.closest('[data-category-value]');if(!b)return;select.value=b.dataset.categoryValue;select.dispatchEvent(new Event('change',{bubbles:true}));renderCategoryIconGrid(selectId,gridId);});
 }
 bindCategoryGrid('categoryIconGrid','category');bindCategoryGrid('editCategoryIconGrid','editCategory');
+let selectedHomeCategory=cats.expense[0];
+function renderHome(){
+ const grid=$('homeCategoryGrid');if(!grid)return;
+ const isEn=currentLang==='en';
+ grid.innerHTML=cats.expense.map(name=>{
+  const visual=categoryVisuals[name]||['●','#64748b'],label=categoryLabel(name);
+  return '<button type="button" class="home-category-card'+(selectedHomeCategory===name?' selected':'')+'" data-home-category="'+String(name).replaceAll('&','&amp;').replaceAll('"','&quot;')+'"><span class="home-category-icon" style="background:'+visual[1]+'">'+visual[0]+'</span><span class="home-category-copy"><strong>'+label+'</strong><small>'+label+(isEn?' expenses':'-এর হিসাব')+'</small></span><span class="home-category-arrow">›</span></button>';
+ }).join('');
+ const month=$('homeMonthPicker')?.value||$('reportMonth')?.value||today.slice(0,7);
+ const monthRows=entries.filter(x=>String(x.date||'').startsWith(month));
+ const income=monthRows.filter(x=>x.type==='income').reduce((n,x)=>n+Number(x.amount||0),0);
+ const expense=monthRows.filter(x=>x.type==='expense').reduce((n,x)=>n+Number(x.amount||0),0);
+ $('homeMonthlyIncome').textContent=money(income);$('homeMonthlyExpense').textContent=money(expense);$('homeMonthlyBalance').textContent=money(income-expense);
+}
+$('homeCategoryGrid').addEventListener('click',e=>{const b=e.target.closest('[data-home-category]');if(!b)return;selectedHomeCategory=b.dataset.homeCategory;renderHome()});
+$('homeAddMore').addEventListener('click',()=>{$('type').value='expense';updateCats();$('category').value=selectedHomeCategory;fillSubcategories(selectedHomeCategory,'subcategory','subcategoryWrap');addCustomSubcategory().then(()=>renderHome())});
+$('homeMonthPicker').value=today.slice(0,7);
+$('homeMonthPicker').addEventListener('change',()=>{$('reportMonth').value=$('homeMonthPicker').value;renderHome();render()});
+
 function updateCats(){const t=$('type').value;$('category').innerHTML=cats[t].map(c=>`<option value="${c}">${categoryLabel(c)}</option>`).join('');fillSubcategories($('category').value,'subcategory','subcategoryWrap');renderCategoryIconGrid('category','categoryIconGrid')}
 
 function customSubcategoryDialog(mode,initial=''){
@@ -502,7 +568,7 @@ $('deleteCustomSubcategory').addEventListener('click',async()=>{
 });
 
 $('type').addEventListener('change',updateCats);$('category').addEventListener('change',()=>fillSubcategories($('category').value,'subcategory','subcategoryWrap'));$('subcategory').addEventListener('change',refreshCustomSubcategoryActions);updateCats();
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const tab=b.dataset.tab,target=tab==='backup'?'report':(tab==='home'?'entry':tab);document.querySelectorAll('.main-nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.entry-nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===target));['entry','history','report','finance','settings','about'].forEach(id=>{const el=$(id);if(el)el.classList.toggle('hidden',id!==target)});if(tab==='backup'){setTimeout(()=>$('backupTools').scrollIntoView({behavior:'smooth',block:'center'}),80)}render()});
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const tab=b.dataset.tab,target=tab==='backup'?'report':tab;document.querySelectorAll('.main-nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.entry-nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===target));['home','entry','history','report','finance','settings','about'].forEach(id=>{const el=$(id);if(el)el.classList.toggle('hidden',id!==target)});document.body.classList.toggle('home-active',target==='home');if(tab==='backup'){setTimeout(()=>$('backupTools').scrollIntoView({behavior:'smooth',block:'center'}),80)}render()});
 $('entryForm').onsubmit=e=>{e.preventDefault();const amount=Number($('amount').value);if(!(amount>0))return;
 entries.push({id:Date.now().toString(),type:$('type').value,date:$('date').value,amount,category:$('category').value,subcategory:$('subcategory').value||'',note:$('note').value.trim()});
 save();$('entryForm').reset();$('date').value=today;updateCats();$('formMsg').textContent=tr('saved');};
@@ -511,6 +577,7 @@ function transactionItem(x,esc){const label=categoryLabel(x.category)+(x.subcate
 let selectedReportMetric='income';
 document.querySelectorAll('.metric-tab').forEach(b=>b.addEventListener('click',()=>{selectedReportMetric=b.dataset.metric;render()}));
 function render(){
+renderHome();
 const inc=entries.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=entries.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
 $('totalIncome').textContent=money(inc);$('totalExpense').textContent=money(exp);$('balance').textContent=money(inc-exp);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -527,7 +594,7 @@ $('cancelEdit').onclick=()=>{$('editModal').classList.add('hidden');editingId=nu
 $('confirmDelete').onclick=()=>{if(deletingId!==null){entries=entries.filter(x=>x.id!==deletingId);deletingId=null;save()}$('deleteModal').classList.add('hidden')};
 $('cancelDelete').onclick=()=>{deletingId=null;$('deleteModal').classList.add('hidden')};
 $('transactions').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)window.editEntry(edit.dataset.edit);if(del)window.deleteEntry(del.dataset.delete)});
-['fromDate','toDate','reportMonth'].forEach(id=>$(id).addEventListener('change',render));
+['fromDate','toDate','reportMonth'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='reportMonth')$('homeMonthPicker').value=$('reportMonth').value;render()}));
 
 function reportData(){const month=$('reportMonth').value||today.slice(0,7),tx=entries.filter(x=>String(x.date||'').startsWith(month)),moves=movements.filter(x=>String(x.date||'').startsWith(month)),inc=tx.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount||0),0),exp=tx.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount||0),0);return {month,tx,moves,inc,exp,accounts,loans,repayments,emiPlans,emiPayments}}
 const reportEsc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
