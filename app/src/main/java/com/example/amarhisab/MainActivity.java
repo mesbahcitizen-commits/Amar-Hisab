@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
     s.setJavaScriptEnabled(true);
     s.setDomStorageEnabled(true);
     s.setAllowFileAccess(true);
+    s.setAllowUniversalAccessFromFileURLs(true);
     s.setAllowContentAccess(true);
     webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
     webView.setWebViewClient(new WebViewClient());
