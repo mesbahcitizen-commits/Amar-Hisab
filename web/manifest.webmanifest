@@ -1,0 +1,19 @@
+{
+  "name": "Amar Hisab",
+  "short_name": "Amar Hisab",
+  "description": "Personal income and expense tracker",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f7f7",
+  "theme_color": "#0f766e",
+  "lang": "bn",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

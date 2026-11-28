@@ -3,7 +3,7 @@ name: Build Amar Hisab APK
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, 'feature/amar-hisab-2.0']
 
 jobs:
   build:
@@ -12,6 +12,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Validate Android app HTML and JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('app/src/main/assets/index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script[^>]*>([\s\S]*?)</script>', html, re.I)
+          assert scripts, 'No inline JavaScript found'
+          js = '\n'.join(scripts)
+          Path('/tmp/amar-hisab-inline.js').write_text(js, encoding='utf-8')
+          ids = set(re.findall('id="([^"]+)"', html))
+          refs = set(re.findall(r"\$\(\s*'([^']+)'\s*\)", js))
+          refs.update(re.findall(r'\$\(\s*"([^"]+)"\s*\)', js))
+          missing = sorted(refs - ids)
+          assert not missing, f'Missing DOM ids: {missing}'
+          nav = html.find('class="main-nav"')
+          header_end = html.find('</header>')
+          main = html.find('<main')
+          summary = html.find('<section class="cards"')
+          assert 0 <= header_end < nav < main <= summary, 'Shortcut navigation must appear at the top, immediately after the header'
+          for tab in ('home', 'report', 'finance', 'settings', 'about'):
+              count = len(re.findall(r'data-tab="' + tab + r'"', html))
+              assert count == 1, f'Expected exactly one {tab} shortcut, found {count}'
+          assert re.search(r'<nav class="main-nav"[^>]*>\s*<button[^>]*data-tab="home"', html), 'Home must be the first top shortcut'
+          assert "format:'amar-hisab-cross-platform'" in js and "version:5" in js, 'Cross-platform backup format is missing'
+          for field in ('dpsDeposits', 'loanUses', 'customSubcats'):
+              assert field in js, f'Cross-platform backup field missing: {field}'
+          for element_id in ('historyTotals', 'historyIncomeTotal', 'historyExpenseTotal'):
+              assert f'id="{element_id}"' in html, f'Missing date-range summary element: {element_id}'
+          assert 'historyIncome=incomeList.reduce' in js and 'historyExpense=expenseList.reduce' in js, 'Date-range totals must be calculated from filtered transactions'
+          print('HTML structure and shortcut checks passed')
+          PY
+          node --check /tmp/amar-hisab-inline.js
 
       - name: Setup Java
         uses: actions/setup-java@v5
